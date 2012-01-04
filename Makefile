@@ -5,8 +5,8 @@ all:
 xetex:	
 	# xetex $(MAINDOC).tex
 	# xetex $(MAINDOC).tex
-	xelatex $(MAINDOC)
-	xelatex $(MAINDOC)
+	xelatex -interaction=nonstopmode $(MAINDOC)
+	xelatex -interaction=nonstopmode $(MAINDOC)
 	# makeindex
 	# xelatex $(MAINDOC)
 	make clean
