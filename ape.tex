@@ -1,0 +1,97 @@
+%!TEX TS-program = pdflatex
+\documentclass[10pt, a4paper, twoside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[german,ngerman]{babel}
+\usepackage{mflogo}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{pdfsync} % for use with Skim ctrl + cmd + w
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{subfig}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{courier} % for listings
+\usepackage{fancyhdr}
+\lstset{
+  language=Ruby,
+  basicstyle=\footnotesize\ttfamily,
+  numbers=left,
+  numberstyle=\tiny,
+  tabsize=2,
+  numbersep=7pt,
+  xleftmargin=11pt,
+  framexleftmargin=17pt,
+  framexrightmargin=5pt,
+  framexbottommargin=24pt,
+}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\usepackage[numbers]{natbib}
+\bibliographystyle{natdin}
+
+\newcommand{\entspricht}{\ensuremath{\mathrel{\widehat{=}}}}
+\newcommand{\code}[1]{\texttt{\footnotesize{#1}}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\definecolor{grey}{rgb}{0.3,0.3,0.3}
+\definecolor{lightgrey}{rgb}{0.8,0.8,0.8}
+
+%-------------------------------------------
+\pagestyle{fancy}
+\fancyhf{} % delete current setting for header and footer
+
+\setlength{\headheight}{17.5pt}
+\fancyhead[RO]
+{
+  \bfseries\rightmark\quad~
+  \colorbox{lightgrey}
+  {
+    \raisebox{0cm}[0.3cm][0.1cm]
+    {
+      \makebox[5cm][l]{\textbf{\thepage}}
+    }
+  }
+  \hspace*{-6.5cm} % stupid but works
+}
+\fancyhead[LE]
+{
+  \hspace*{-6.5cm} % stupid but works
+  {
+    \colorbox{lightgrey}
+    {
+      \raisebox{0cm}[0.3cm][0.1cm]
+      {
+        \makebox[5cm][r]{\textbf{\thepage}}
+      }
+    } \quad~ \bfseries\leftmark
+  }
+}
+
+% \fancyhead[LE,RO]{\bfseries\thepage}
+% \fancyhead[LO]{\bfseries\rightmark}
+% \fancyhead[RE]{\bfseries\leftmark}
+ 
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\addtolength{\headheight}{0pt} % make space for the rule
+%---------------------------------------------------------------------
+
+
+\begin{document}
+    
+    \pagenumbering{Roman} % römische nummerierung für vorspiel
+    
+    \input{titlepage}
+    \input{preamble}
+
+    \pagenumbering{arabic} % arabische nummerierung für hauptteil
+    
+    \input{main}
+    
+    % \newpage
+    % \bibliography{ape}
+\end{document}
