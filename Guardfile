@@ -18,6 +18,8 @@ guard 'shell' do
         print console_red(line)
       elsif lines_to_print > 0
         lines_to_print = lines_to_print - 1
+        print line
+      elsif line.scan(/warning/i).count > 0
         print console_yellow(line)
       end
     end
