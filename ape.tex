@@ -2,7 +2,20 @@
 \documentclass[10pt, a4paper, twoside]{article}
 \usepackage{xltxtra} % for xelatex
 \defaultfontfeatures{Ligatures=TeX}
+
+\usepackage{hyperref}
+\usepackage[
+toc,
+acronym,
+nonumberlist,
+style=altlist
+]
+{glossaries}
+% renames must happen *before* babel package
+\renewcommand{\glossaryname}{Stichwortverzeichnis}
+\renewcommand{\acronymname}{Abkürzungsverzeichnis}
 \usepackage[german,ngerman]{babel}
+
 \usepackage{mflogo}
 % \usepackage{amsmath}
 % \usepackage{amssymb}
@@ -15,6 +28,8 @@
 \usepackage{xcolor}
 \usepackage{courier} % for listings
 \usepackage{fancyhdr}
+
+
 \lstset{
 	language=Ruby,
 	basicstyle=\footnotesize\ttfamily,
@@ -89,13 +104,16 @@
     
     \pagenumbering{Roman} % römische nummerierung für vorspiel
     
-    \input{titlepage}
+    \input{glossar}
+	\input{titlepage}
     \input{preamble}
 
     \pagenumbering{arabic} % arabische nummerierung für hauptteil
     
     \input{main}
     
+	\printglossaries
+	
     % \newpage
     % \bibliography{ape}
 \end{document}

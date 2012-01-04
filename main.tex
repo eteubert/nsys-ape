@@ -5,7 +5,7 @@ Das Projekt entsteht im Auftrag der Agentur inpsyde GmbH. Diese erhofft sich Kos
 
 Automatisierung wird an verschiedenen Stellen eingeführt. Da bereits das Versionskontrollsystem git verwendet wird, werden dessein Eigenschaften ausgenutzt. Hält ein Entwickler ein Feature für abgeschlossen, stellt er über den Service GitHub einen so genannten Pull Request. Alle am Projekt beteiligten Entwickler werden benachrichtigt und können Anmerkungen und sogar Änderungen vornehmen, bevor das Feature gemerged wird. Dies geschieht automatisch. Außerdem wird im Projektmanagement-Tool Basecamp eine zum Pull Request passende ToDo erstellt. Der Kunde wird außerdem per E-Mail benachrichtigt.
 
-Letztgenannter Part ist insbesondere rechtlich interessant. Der Kunde kann das Feature nun in einer separaten Testumgebung ansehen und eventuell von seiner eigenen Q\&A-Abteilung verifizieren lassen. Ist der Kunde zufrieden, hakt er die ToDo ab und gibt damit sein Einverständnis. Es kann vertraglich geregelt werden, dass der Kunde sich der Qualität des Features versichert hat und somit die inpsyde GmbH keinerlei Kosten für eventuell auf diesem Feature basierenden Ausfällen übernimmt.
+Letztgenannter Part ist insbesondere rechtlich interessant. Der Kunde kann das Feature nun in einer separaten Testumgebung ansehen und eventuell von seiner eigenen \gls{qa}-Abteilung verifizieren lassen. Ist der Kunde zufrieden, hakt er die ToDo ab und gibt damit sein Einverständnis. Es kann vertraglich geregelt werden, dass der Kunde sich der Qualität des Features versichert hat und somit die inpsyde GmbH keinerlei Kosten für eventuell auf diesem Feature basierenden Ausfällen übernimmt.
 
 Die Bestätigung des Kunden löst einen weiteren Automatisierungsmechanismus auf. Das Feature wird in den produktiven Versionierungszweig gemerged und sofort auf das Produktivsystem deployed. Der Entwickler muss nichts weiter unternehmen und der Kunde kann sein akzeptiertes Feature ohne Verzögerung betrachten.
 
@@ -35,37 +35,37 @@ Insgesamt wird ein Service entwickelt, welcher die bereits genutzten Systeme Git
 \subsection{Übertragung der Dateien} % (fold)
 \label{sub:Übertragung_der_dateien}
 
-Im Folgenden wird das Übertragen der Dateien vom Git-Repository zum Zielsystem beschrieben. Je nach Serversetup sind verschiedene Übertragungsmechanismen notwendig. Im Moment kann ein Produkt über FTP, sowie SSH deployed werden.
+Im Folgenden wird das Übertragen der Dateien vom Git-Repository zum Zielsystem beschrieben. Je nach Serversetup sind verschiedene Übertragungsmechanismen notwendig. Im Moment kann ein Produkt über \gls{ftp}, sowie \gls{ssh} deployed werden.
 
 Die Anforderung besteht darin, Dateien zu übertragen. Dabei bestimmen verschiedene Faktoren über die Güte des verwendeten Verfahrens. Es wird vorausgesetzt, dass alle Dateien fehlerfrei übertragen werden. Ein Verfahren gilt als besser, wenn es dieses Ziel in kürzerer Zeit erreichen kann. Weiterhin sind Systeme vorzuziehen, welche den Ausschluss einzelner Verzeichnisse aus der Übertragung zulassen. Diejenigen, welche nur zur Entwicklung benötigt werden, müssen nicht auf Zielsysteme übertragen werden.
 
 \subsubsection{Deployment mit SSH} % (fold)
 \label{ssub:deployment_mit_ssh}
 
-Ein Zugang über SSH setzt voraus, dass ein Schlüsselpaar generiert und eingerichtet ist. Ist diese Voraussetzung erfüllt, gibt es aufgrund der Mächtigkeit des Protokolls verschiedene Möglichkeiten, das Produkt tatsächlich zu übertragen.
+Ein Zugang über \gls{ssh} setzt voraus, dass ein Schlüsselpaar generiert und eingerichtet ist. Ist diese Voraussetzung erfüllt, gibt es aufgrund der Mächtigkeit des Protokolls verschiedene Möglichkeiten, das Produkt tatsächlich zu übertragen.
 
-Es wird davon ausgegangen, dass alle Produkte mit Git verwaltet werden. Daher ist es denkbar, sich auf das Zielsystem per SSH einzuloggen und dort im Deployment-Pfad mit einem **git pull** das Produkt zu aktualisieren. Dies setzt jedoch voraus, dass das Programm git auf allen Zielsystemen installiert ist. Die Konfiguration der einzelnen Server ist aber ungewiss und kann nicht immer beeinflusst werden. Daher wird auf diesen Ansatz verzichtet.
+Es wird davon ausgegangen, dass alle Produkte mit Git verwaltet werden. Daher ist es denkbar, sich auf das Zielsystem per \gls{ssh} einzuloggen und dort im Deployment-Pfad mit einem \lstinline!git pull! das Produkt zu aktualisieren. Dies setzt jedoch voraus, dass das Programm git auf allen Zielsystemen installiert ist. Die Konfiguration der einzelnen Server ist aber ungewiss und kann nicht immer beeinflusst werden. Daher wird auf diesen Ansatz verzichtet.
 
 Stattdessen wird das Produkt mit rsync\comment{externe referenz bietet sich an} übertragen. Rsync ist eine Anwendung, um Dateien und Verzeichnisse zwischen Servern zu synchronisieren. Durch die Verwendung von Delta Encoding\comment{externe referenz bietet sich an} ist der Vorgang zudem effizienter als bei einer normalen Dateiübertragung. Ein weiteres für diesen Anwendungsfall nützliches Feature ist die Möglichkeit, einzelne Verzeichnisse von der Übertragung auszuschließen. Auf den Zielsystemen wird nicht entwickelt, daher kann auf das .git Verzeichnis verzichtet werden. Ein Aufruf sieht beispielhaft wie folgt\comment{LaTeX-Referenz draus machen} aus:
 
 > rsync -r --exclude=.git <lokaler-pfad> <user>@<host>:<entfernter-pfad>
 
-Der Parameter **-r** sorgt für eine rekursive Übertragung aller Verzeichnisse. Die Möglichkeit, über den **--exclude** Parameter Verzeichnisse ausschließen zu können ist nicht notwendig, aber vorteilhaft. Das .git Verzeichnis beinhaltet tausende kleiner Dateien, welche den Übertragungsvorgang verlangsamen würden.
+Der Parameter \lstinline!-r! sorgt für eine rekursive Übertragung aller Verzeichnisse. Die Möglichkeit, über den \lstinline!--exclude! Parameter Verzeichnisse ausschließen zu können ist nicht notwendig, aber vorteilhaft. Das .git Verzeichnis beinhaltet tausende kleiner Dateien, welche den Übertragungsvorgang verlangsamen würden.
 
-Insgesamt ist die Dateiübertragung mit rsync über SSH zu bevorzugen. Mit dem einen oben genannten Befehl\comment{LaTeX-Referenz draus machen} werden alle Anforderungen erfüllt.
+Insgesamt ist die Dateiübertragung mit rsync über \gls{ssh} zu bevorzugen. Mit dem einen oben genannten Befehl\comment{LaTeX-Referenz draus machen} werden alle Anforderungen erfüllt.
 
 % subsubsection deployment_mit_ssh (end)
 
 \subsubsection{Deployment mit FTP} % (fold)
 \label{ssub:deployment_mit_ftp}
 
-Aus verschiedenen Gründen kann es sein, dass eine Übertragung der Dateien über SSH nicht möglich ist. Als alternative Option wird das File Transfer Protocol FTP angeboten. Im Folgenden werden zunächst die wesentlichen Einschränkungen und Nachteile des Protokolls formuliert.
+Aus verschiedenen Gründen kann es sein, dass eine Übertragung der Dateien über \textbf{SSH} nicht möglich ist. Als alternative Option wird das File Transfer Protocol \gls{ftp} angeboten. Im Folgenden werden zunächst die wesentlichen Einschränkungen und Nachteile des Protokolls formuliert.
 
-Als erstes muss der Sicherheitsaspekt bedacht werden. Im Gegensatz zu SSH geschieht die FTP-Authentifizierung über Nutzername und Passwort. Da alle Vorgänge automatisiert stattfinden sollen, muss das FTP-Passwort im Klartext in der Datenbank hinterlegt sein. Eine Verschlüsselung ist möglich, jedoch kein Hashing. Dieses wird sonst für Passwörter verwendet, um einen Rückschluss auf das Klartextpasswort zu verhindern. Darum muss darauf geachtet werden, dem FTP-Nutzer nur die minimal nötigen Rechte einzuräumen.
+Als erstes muss der Sicherheitsaspekt bedacht werden. Im Gegensatz zu \gls{ssh} geschieht die \gls{ftp}-Authentifizierung über Nutzername und Passwort. Da alle Vorgänge automatisiert stattfinden sollen, muss das \gls{ftp}-Passwort im Klartext in der Datenbank hinterlegt sein. Eine Verschlüsselung ist möglich, jedoch kein Hashing. Dieses wird sonst für Passwörter verwendet, um einen Rückschluss auf das Klartextpasswort zu verhindern. Darum muss darauf geachtet werden, dem \gls{ftp}-Nutzer nur die minimal nötigen Rechte einzuräumen.
 
 Weiterhin verfügt das Protokoll nur über einen eingeschränkten Sprachschatz. Verzeichnisse können nicht rekursiv übertragen werden. Es können Dateien aus dem jeweils aktuellen Verzeichnis übertragen werden. Dabei ist es notwendig, dass sowohl lokal als auch auf dem Zielsystem in jedes Verzeichnis des Produkts gewechselt wird.
 
-Da all das vollautomatisiert ablaufen muss, wurde ein Algorithmus entwickelt, welcher für ein gegebenes Projekt ein FTP-Script zur Übertragung generiert. Zunächst wird mit Hilfe von find\comment{externe referenz bietet sich an} eine Liste aller Pfade ermittelt. Ein Beispiel ist in Listing \comment{LaTeX-Referenz draus machen} zu sehen.
+Da all das vollautomatisiert ablaufen muss, wurde ein Algorithmus entwickelt, welcher für ein gegebenes Projekt ein \gls{ftp}-Script zur Übertragung generiert. Zunächst wird mit Hilfe von find\comment{externe referenz bietet sich an} eine Liste aller Pfade ermittelt. Ein Beispiel ist in Listing \comment{LaTeX-Referenz draus machen} zu sehen.
 
 \begin{lstlisting}
 > find <path> -ls -path '*/.git*' -prune |\
@@ -84,7 +84,7 @@ Der find\comment{externe referenz bietet sich an} Befehl schließt mit Hilfe der
 	-rw-r--r-- ./README
 \end{lstlisting}
      
-Anschließend wird anhand dieser Ausgabe eine Baumdatenstruktur erstellt, welche das Verzeichnis repräsentiert. Nun kann mit Hilfe des Visitor-Patterns\comment{externe referenz bietet sich an} das FTP-Script generiert werden. Trifft der Visitor auf eine Datei, wird diese mit \lstinline!put <datei>! übertragen. Der Pseudocode zum Verarbeiten eines Verzeichnisses ist in Listing \comment{LaTeX-Referenz draus machen} zu sehen.
+Anschließend wird anhand dieser Ausgabe eine Baumdatenstruktur erstellt, welche das Verzeichnis repräsentiert. Nun kann mit Hilfe des Visitor-Patterns\comment{externe referenz bietet sich an} das \gls{ftp}-Script generiert werden. Trifft der Visitor auf eine Datei, wird diese mit \lstinline!put <datei>! übertragen. Der Pseudocode zum Verarbeiten eines Verzeichnisses ist in Listing \comment{LaTeX-Referenz draus machen} zu sehen.
 
 \begin{lstlisting}
 	out = Array.new
@@ -104,7 +104,7 @@ Nachdem das Verzeichnis auf dem Zielsystem erstellt wurde, wird es sowohl lokal 
 \subsubsection{Vergleich der Deployment Varianten} % (fold)
 \label{ssub:vergleich_der_deployment_varianten}
 
-Während über SSH ein einziger rsync-Befehl ausreicht, um alle Andforderungen zu erreichen, muss für FTP ein ganz eigener Algorithmus implementiert werden. Die SSH-Authentifizierung ist sicher, da sie über ein Schlüsselpaar hergestellt wird. FTP hingegen ist auf ein Klartext-Passwort angewiesen. Außerdem ist rsync schneller und damit effizienter als FTP\comment{externe referenz bietet sich an}. Wenn die Auswahl besteht, sollte daher immer die SSH-Variante vorgezogen werden.
+Während über \gls{ssh} ein einziger rsync-Befehl ausreicht, um alle Andforderungen zu erreichen, muss für \gls{ftp} ein ganz eigener Algorithmus implementiert werden. Die \gls{ssh}-Authentifizierung ist sicher, da sie über ein Schlüsselpaar hergestellt wird. \gls{ftp} hingegen ist auf ein Klartext-Passwort angewiesen. Außerdem ist rsync schneller und damit effizienter als \gls{ftp}\comment{externe referenz bietet sich an}. Wenn die Auswahl besteht, sollte daher immer die \gls{ssh}-Variante vorgezogen werden.
 
 % subsubsection vergleich_der_deployment_varianten (end)
 
