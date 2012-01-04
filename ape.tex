@@ -16,16 +16,19 @@
 \usepackage{courier} % for listings
 \usepackage{fancyhdr}
 \lstset{
-  language=Ruby,
-  basicstyle=\footnotesize\ttfamily,
-  numbers=left,
-  numberstyle=\tiny,
-  tabsize=2,
-  numbersep=7pt,
-  xleftmargin=11pt,
-  framexleftmargin=17pt,
-  framexrightmargin=5pt,
-  framexbottommargin=24pt,
+	language=Ruby,
+	basicstyle=\footnotesize\ttfamily,
+	numbers=left,
+	numberstyle=\tiny,
+	tabsize=2,
+	numbersep=7pt,
+	xleftmargin=11pt,
+	framexleftmargin=17pt,
+	framexrightmargin=5pt,
+	framexbottommargin=24pt,
+	morekeywords={find,awk,printf,git},
+	showspaces=false,
+	showstringspaces=false
 }
 \DeclareCaptionFont{white}{\color{white}}
 \DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
@@ -36,6 +39,7 @@
 \newcommand{\entspricht}{\ensuremath{\mathrel{\widehat{=}}}}
 \newcommand{\code}[1]{\texttt{\footnotesize{#1}}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\comment}[1]{}
 
 \definecolor{grey}{rgb}{0.3,0.3,0.3}
 \definecolor{lightgrey}{rgb}{0.8,0.8,0.8}
