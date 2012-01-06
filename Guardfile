@@ -7,6 +7,7 @@ ERROR_LINES = 7
 
 guard 'shell' do
   watch(/(.*).tex/) do |m|
+    puts "\nChange detected. Beginning new build process ..."
     out = `make`
 
     lines_to_print = 0
