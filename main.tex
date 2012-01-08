@@ -36,7 +36,12 @@ Das folgende Kapitel erläutert die Details des entstandenen Services. Zunächst
 %% Welches Problem wird gelöst
 \gls{ape} wird speziell für die Firma \gls{inps} entwickelt. Daher ist es zum Verständnis des Problems notwendig, eine Vorstellung von deren Dienstleistungen und Arbeitsabläufen zu haben.
 
-Die \gls{inps} ist eine deutsche \gls{wp}-Agentur. Sie nimmt Aufträge von Kunden aller Größe an, um ihre Webseitenwünsche im \gls{cms} \gls{wp} umzusetzen. Die Auftragsbreite reicht von kleinen Pluginentwicklungen bis hin zur Konzeption und Umsetzung ganzer Blognetzwerke und Shopsystemen.
+\subsubsection{\gls{inps}} % (fold)
+\label{ssub:inps}
+
+% subsubsection inps (end)
+
+Die \gls{inps} ist eine deutsche \gls{wp}-Agentur. Sie nimmt Aufträge von Kunden aller Größe an, um ihre Webseitenwünsche im \gls{cms} \gls{wp} umzusetzen. Die Auftragsbreite reicht von kleinen Pluginentwicklungen bis hin zur Konzeption und Umsetzung ganzer Blognetzwerke und Shopsysteme.
 
 Ihre Mitarbeiter befinden sich verteilt in Mitteleuropa und arbeiten vorwiegend von zuhause. Damit arbeitet die \gls{inps} dezentral. Um je nach Auftragslage flexibel handeln zu können, werden mehr freie als fest angestellte Mitarbeiter beschäftigt.
 
@@ -78,6 +83,43 @@ Im Folgenden wird nicht mehr zwischen Fehlerbericht und Featureanfrage unterschi
 	\label{fig:tatsaechliche-beziehung}
 \end{figure}
 
+\subsubsection{Entwicklung eines Features} % (fold)
+\label{ssub:entwicklung_eines_features}
+
+Abhängig vom Projekt unterscheiden gibt es Abweichungen vom Arbeitsablauf. Doch die prinzipielle Vorgehensweise ist immer die gleiche. Diese wird nun beschrieben.
+
+Der Kunde formuliert die Spezifikation für ein Feature oder eine Menge von Features. Diese werden vom Projekleiter begutachtet und eventuelle Unklarheiten werden im Dialog mit dem Kunden beseitigt. Ist das Projekt bereits fortgeschritten, formuliert der Kunde seine Wünsche direkt im Basecamp. Erfahrungsgemäß sind dies dann nur noch Anpassungen und Fehlerberichte, so dass der Projektleiter nicht mehr jede Anfrage kontrollieren muss.
+
+Ein Entwickler weist sich eigenverantwortlich eine Teilaufgabe zu und beginnt, diese zu bearbeiten. Dazu stellt er sicher, dass er lokal die aktuelle Variante des Projekts vorliegen hat und beginnt, das Feature umzusetzen. Im Moment ist es dem Entwickler überlassen, ob er in separaten Branches arbeitet oder nicht. Sind mehrere Entwickler an einem Projekt beteiligt, sollen diese sich lediglich auf eine Vorgehensweise einigen.
+
+Ist das Feature fertig entwickelt, werden die Änderungen manuell in ein Testsystem übertragen und der Kunde benachrichtigt. Der Kommunikationskanal ist dabei wieder projektabhängig. Ist der Kunde zufrieden, muss das Feature manuell auf das Produktivsystem übertragen werden.
+
+Da der Vorgang insgesamt sehr aufwändig ist, wird vorwiegend in Releases gearbeitet. Das heißt, dass einige Tage oder Wochen Features entwickelt und in unregelmäßigen Abständen auf das Testsystem übertragen werden. An einem definierten Datum gibt es einen \gls{feature_freeze}. Einen Tag lang wird nur noch an der Stabilität des Releases gearbeitet und der Release selbst vorbereitet und durchgeführt. Verläuft dieser erfolgreich, beginnt der Zyklus erneut.
+
+Diese Vorgehensweise funktioniert, ist jedoch umständlicher als sie sein müsste. Die Webplattform ist prädestiniert für tägliche oder mehrmals tägliche Releases. Es muss lediglich ein passender Workflow gefunden werden.
+
+Weiterhin besteht im Moment das Problem, dass zwischen Projekten Unterschiede herrschen, die zwar klein aber doch vorhanden sind. Das sorgt dafür, dass Entwickler nicht konfliktfrei zwischen Projekten wechseln können. Es ist immer mit Verwirrung und Absprachen verbunden, die bei geeigneten Konventionen nicht nötig wären.
+
+Dieses Problem soll \gls{ape} lösen. Es ist ein Workflow zu entferfen, welcher Konventionen einführt, der die oben genannten Abläufe vereinheitlicht. Automatisierungen sind, wo möglich, mit Hilfe der Software umzusetzen.
+
+% subsubsection entwicklung_eines_features (end)
+
+\subsection{Einheitlicher Workflow} % (fold)
+\label{sub:einheitlicher_workflow}
+
+Zunächst wird festgelegt, dass jedes Feature in seinem eigenen \gls{git}-Branch entwickelt wird. Das hat mehrere Vorteile. Entwickler in einem Projekt müssen sich weniger absprechen, da jeder in seinem eigenen Branch arbeitet. Ein Entwickler kann bei Prioritätenverschiebung zudem sofort die Arbeit an einem Feature anhalten und in einem parallelen Branch das wichtigere Feature bearbeiten. Auf Codeebene lässt sich mit einem einzigen \gls{git}-Befehl ermitteln, welche Zeilen das Feature verändert.
+
+Weiterhin werden \gls{github} \glspl{pull request} ein fester Bestandteil des Workflows. Dies sind automatisierte Anträge, einen Branch in einen anderen zu mergen. Ein \gls{pull request} zeigt die Versionshistorie des Features und die Summe aller Änderungen. Andere Entwickler können das Feature reviewen, Anmerkungen hinterlassen und selbst Änderungen am Feature vornehmen. Sind alle Entwickler mit der Codequalität zufrieden, wird der \gls{pull request} akzeptiert und \gls{github} merged die Branches automatisch.
+
+Ein \gls{pull request} wird vom Entwickler genau dann erstellt, wenn er mit der Entwicklung eines Features fertig ist und dieses bereit für das Staging-System ist. Wird dieser akzeptiert, sollen automatisch zwei Aktionen geschehen. Zum Einen muss das Feature auf dem Staging-System verfügbar werden. Zum Anderen soll der Kunde benachrichtigt werden, dass dieses Feature nun bereit zum testen ist. Beide Aufgaben werden vom \gls{ape} übernommen.
+
+Das \gls{ape}-System wird von GitHub per \Gls{webhook} informiert, dass ein Pull Request akzeptiert wurde. Zuerst wird das Staging-System aktualisiert. Dazu müssen lediglich die Dateien aus dem Staging-Branch übertragen werden, da \gls{github} bereits das Mergen der Branches übernommen hat. Anschließend wird über eine API in \gls{basecamp} ein To-do angelegt, welches den Kunden über das Feature im Testsystem informiert und und um Feedback bittet. Basecamp verschickt automatisch eine E-Mail an den Kunden, so dass zwischen Akzeptanz des \glspl{pull request} und der automatischen Benachrichtigung des Kunden lediglich Sekunden oder Minuten liegen.
+
+Gibt es Probleme, kann der Kunde diese über das Kommentarsystem in \gls{basecamp} äußern und der Entwickler kann diese bearbeiten. Ist der Kunde sofort oder nach Behebung aller Probleme zufrieden, kennzeichnet er dies durch das Abhaken der To-do. \gls{ape} registriert die Veränderung des Status der To-do automatisch und beginnt, das Feature auf das Produktivsystem zu übertragen. Dazu merged er selbstständig den Featurebranch in den Produktivbranch und überträgt das Ergebnis auf das Produktivsystem.
+
+Damit ist ein Featurezyklus abgeschlossen. Ist das Feature klein (z.B. nur eine Codezeile muss angepasst werden) und reagieren alle Parteien schnell, kann der gesamte Zyklus einschließlich Programmierung in weniger als 15 Minuten abgearbeitet werden. Damit können selbst kritische Änderungen schnell vorgenommen werden. Es können beliebig viele dieser Zyklen parallel aktiv sein und ein Entwickler kann an verschiedenen Features gleichzeitig arbeiten, ohne dass sich deren Entwicklungsweige behindern.
+
+% subsection einheitlicher_workflow (end)
 
 %% Wie wird es gelöst
 %% Warum wird es so gelöst
