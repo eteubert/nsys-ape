@@ -14,6 +14,9 @@ style=altlist
 % renames must happen *before* babel package
 \renewcommand{\glossaryname}{Stichwortverzeichnis}
 \renewcommand{\acronymname}{Abkürzungsverzeichnis}
+%Remove the dot at the end of glossary descriptions
+\renewcommand*{\glspostdescription}{}
+
 \usepackage[german,ngerman]{babel}
 
 \usepackage{mflogo}
