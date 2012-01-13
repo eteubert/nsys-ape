@@ -7,7 +7,7 @@ Automatisierung wird an verschiedenen Stellen eingeführt. Da bereits das Versio
 
 Letztgenannter Part ist insbesondere rechtlich interessant. Der Kunde kann das Feature nun in einer separaten Testumgebung ansehen und eventuell von seiner eigenen \gls{qa}-Abteilung verifizieren lassen. Ist der Kunde zufrieden, hakt er die ToDo ab und gibt damit sein Einverständnis. Es kann vertraglich geregelt werden, dass der Kunde sich der Qualität des Features versichert hat und somit die \gls{inps} keinerlei Kosten für eventuell auf diesem Feature basierenden Ausfällen übernimmt.
 
-Die Bestätigung des Kunden löst einen weiteren Automatisierungsmechanismus auf. Das Feature wird in den produktiven Versionierungszweig gemerged und sofort auf das Produktivsystem deployed. Der Entwickler muss nichts weiter unternehmen und der Kunde kann sein akzeptiertes Feature ohne Verzögerung betrachten.
+Die Bestätigung des Kunden löst einen weiteren Automatisierungsmechanismus auf. Das Feature wird in den produktiven Versionierungszweig gemerged und sofort auf das \gls{produktivsystem} deployed. Der Entwickler muss nichts weiter unternehmen und der Kunde kann sein akzeptiertes Feature ohne Verzögerung betrachten.
 
 Insgesamt wird ein Service entwickelt, welcher die bereits genutzten Systeme GitHub und Basecamp verbindet und einige Automatisierungen durchführt. Die Integration ist dabei transparent. Weder Kunde noch Entwickler sieht jemals eine grafische Oberfläche des Services. Beide Parteien profitieren jedoch von den Automatisierungen und Absicherungen, welche der Service bietet.
 
@@ -92,7 +92,7 @@ Der Kunde formuliert die Spezifikation für ein Feature oder eine Menge von Feat
 
 Ein Entwickler weist sich eigenverantwortlich eine Teilaufgabe zu und beginnt, diese zu bearbeiten. Dazu stellt er sicher, dass er lokal die aktuelle Variante des Projekts vorliegen hat und beginnt, das Feature umzusetzen. Im Moment ist es dem Entwickler überlassen, ob er in separaten Branches arbeitet oder nicht. Sind mehrere Entwickler an einem Projekt beteiligt, sollen diese sich lediglich auf eine Vorgehensweise einigen.
 
-Ist das Feature fertig entwickelt, werden die Änderungen manuell in ein Testsystem übertragen und der Kunde benachrichtigt. Der Kommunikationskanal ist dabei wieder projektabhängig. Ist der Kunde zufrieden, muss das Feature manuell auf das Produktivsystem übertragen werden.
+Ist das Feature fertig entwickelt, werden die Änderungen manuell in ein Testsystem übertragen und der Kunde benachrichtigt. Der Kommunikationskanal ist dabei wieder projektabhängig. Ist der Kunde zufrieden, muss das Feature manuell auf das \gls{produktivsystem} übertragen werden.
 
 Da der Vorgang insgesamt sehr aufwändig ist, wird vorwiegend in Releases gearbeitet. Das heißt, dass einige Tage oder Wochen Features entwickelt und in unregelmäßigen Abständen auf das Testsystem übertragen werden. An einem definierten Datum gibt es einen \gls{feature_freeze}. Einen Tag lang wird nur noch an der Stabilität des Releases gearbeitet und der Release selbst vorbereitet und durchgeführt. Verläuft dieser erfolgreich, beginnt der Zyklus erneut.
 
@@ -111,13 +111,13 @@ Zunächst wird festgelegt, dass jedes Feature in seinem eigenen \gls{git}-Branch
 
 Weiterhin werden \gls{github} \glspl{pull request} ein fester Bestandteil des Workflows. Dies sind automatisierte Anträge, einen Branch in einen anderen zu mergen. Ein \gls{pull request} zeigt die Versionshistorie des Features und die Summe aller Änderungen. Andere Entwickler können das Feature reviewen, Anmerkungen hinterlassen und selbst Änderungen am Feature vornehmen. Sind alle Entwickler mit der Codequalität zufrieden, wird der \gls{pull request} akzeptiert und \gls{github} merged die Branches automatisch.
 
-Es gibt zwei persistente \gls{git} Branches. \lstinline!dev! und \lstinline!live!. Letztgenannter ist unter allen Umständen stabil zu halten und wird darum nur in Ausnahmefällen manuell beeinflusst. Er ist ein Abbild des Produktivsystems. Fertig entwickelte und vom Kunden bestätigte Features werden vom \gls{ape} in ihn gemerged. Analog dazu repräsentiert der \lstinline!dev! Branch das Staging-System. \gls{ape} merged Branches in \lstinline!dev!, wenn auf \gls{github} ein Pull Request akzeptiert wurde.
+Es gibt zwei persistente \gls{git} Branches. \lstinline!dev! und \lstinline!live!. Letztgenannter ist unter allen Umständen stabil zu halten und wird darum nur in Ausnahmefällen manuell beeinflusst. Er ist ein Abbild des \gls{produktivsystem}s. Fertig entwickelte und vom Kunden bestätigte Features werden vom \gls{ape} in ihn gemerged. Analog dazu repräsentiert der \lstinline!dev! Branch das \gls{stagingsystem}. \gls{ape} merged Branches in \lstinline!dev!, wenn auf \gls{github} ein Pull Request akzeptiert wurde.
 
-Ein \gls{pull request} wird vom Entwickler genau dann erstellt, wenn er mit der Entwicklung eines Features fertig ist und dieses bereit für das Staging-System ist. Wird dieser akzeptiert, sollen automatisch zwei Aktionen geschehen. Zum einen muss das Feature auf dem Staging-System verfügbar werden. Zum anderen soll der Kunde benachrichtigt werden, dass dieses Feature nun bereit zum testen ist. Beide Aufgaben werden vom \gls{ape} übernommen.
+Ein \gls{pull request} wird vom Entwickler genau dann erstellt, wenn er mit der Entwicklung eines Features fertig ist und dieses bereit für das \gls{stagingsystem} ist. Wird dieser akzeptiert, sollen automatisch zwei Aktionen geschehen. Zum einen muss das Feature auf dem \gls{stagingsystem} verfügbar werden. Zum anderen soll der Kunde benachrichtigt werden, dass dieses Feature nun bereit zum testen ist. Beide Aufgaben werden vom \gls{ape} übernommen.
 
-Der \gls{ape}-Service wird von GitHub per \Gls{webhook} informiert, dass ein Pull Request akzeptiert wurde. Zuerst wird das Staging-System aktualisiert. Dazu müssen lediglich die Dateien aus dem Staging-Branch übertragen werden, da \gls{github} bereits das Mergen der Branches übernommen hat. Anschließend wird über eine API in \gls{basecamp} ein To-do angelegt, welches den Kunden über das Feature im Testsystem informiert und um Feedback bittet. Basecamp verschickt automatisch eine E-Mail an den Kunden, so dass zwischen Akzeptanz des \glspl{pull request} und der automatischen Benachrichtigung des Kunden lediglich Sekunden oder Minuten liegen.
+Der \gls{ape}-Service wird von GitHub per \Gls{webhook} informiert, dass ein Pull Request akzeptiert wurde. Zuerst wird das \gls{stagingsystem} aktualisiert. Dazu müssen lediglich die Dateien aus dem Staging-Branch übertragen werden, da \gls{github} bereits das Mergen der Branches übernommen hat. Anschließend wird über eine API in \gls{basecamp} ein To-do angelegt, welches den Kunden über das Feature im Testsystem informiert und um Feedback bittet. Basecamp verschickt automatisch eine E-Mail an den Kunden, so dass zwischen Akzeptanz des \glspl{pull request} und der automatischen Benachrichtigung des Kunden lediglich Sekunden oder Minuten liegen.
 
-Gibt es Probleme, kann der Kunde diese über das Kommentarsystem in \gls{basecamp} äußern und der Entwickler kann diese bearbeiten. Ist der Kunde sofort oder nach Behebung aller Probleme zufrieden, kennzeichnet er dies durch das Abhaken der To-do. \gls{ape} registriert die Veränderung des Status der To-do automatisch und beginnt, das Feature auf das Produktivsystem zu übertragen. Dazu merged er selbstständig den Featurebranch in den Produktivbranch und überträgt das Ergebnis auf das Produktivsystem.
+Gibt es Probleme, kann der Kunde diese über das Kommentarsystem in \gls{basecamp} äußern und der Entwickler kann diese bearbeiten. Ist der Kunde sofort oder nach Behebung aller Probleme zufrieden, kennzeichnet er dies durch das Abhaken der To-do. \gls{ape} registriert die Veränderung des Status der To-do automatisch und beginnt, das Feature auf das \gls{produktivsystem} zu übertragen. Dazu merged er selbstständig den Featurebranch in den Produktivbranch und überträgt das Ergebnis auf das \gls{produktivsystem}.
 
 Damit ist ein Featurezyklus abgeschlossen. Ist das Feature klein (z.B. nur eine Codezeile muss angepasst werden) und reagieren alle Parteien schnell, kann der gesamte Zyklus einschließlich Programmierung in weniger als 15 Minuten abgearbeitet werden. Damit können selbst kritische Änderungen schnell vorgenommen werden. Es können beliebig viele dieser Zyklen parallel aktiv sein und ein Entwickler kann an verschiedenen Features gleichzeitig arbeiten, ohne dass sich deren Entwicklungsweige behindern.
 
@@ -126,7 +126,25 @@ Damit ist ein Featurezyklus abgeschlossen. Ist das Feature klein (z.B. nur eine 
 \subsection{Architektur} % (fold)
 \label{sub:architektur}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Das in dieser Arbeit betrachtete Gesamtsystem kann in sechs Komponenten unterteilt werden. Abbildung \ref{fig:ape_network} illustriert diese Unterteilung. Die sechs Komponenten sind: \circled{1} die Entwickler der \gls{inps}, \circled{2} \gls{github}, \circled{3} der \gls{ape}, \circled{4} die \gls{ape} Repositories, \circled{5} \gls{basecamp} und \circled{6} die Staging- und Produktivsysteme der Kunden.
+
+\begin{figure}
+	\includegraphics[width=1.0\textwidth]{assets/ape_network.eps}
+	\caption{\gls{ape} Netzwerk}
+	\label{fig:ape_network}
+\end{figure}
+
+Zwischen den Entwicklern und \gls{github} gibt es zwei Schnittstellen. \gls{git} und die Webseite von \gls{github}: \url{https://github.com/}. \gls{git} kommt zur Verwaltung des Quellcodes zum Einsatz. Über die Webseite können die Entwickler miteinander kommunizieren und \glspl{pull request} erstellen.
+
+\gls{github} sendet über eine Web-API automatisiert Informationen an \gls{ape}. Diese Schnittstelle kann über die \gls{github} Webseite konfiguriert werden.
+
+\gls{basecamp} To-dos werden vom \gls{ape} erstellt. Dies geschieht über eine XML-basierte \gls{rest} API, welche von \gls{basecamp} bereitgestellt wird. Die Authentifizierung funktioniert über ein von \gls{basecamp} generiertes API Token.
+
+Ein Server mit den \gls{ape} Repositories enthält die geklonten \lstinline!git! Repositories. Der Klonvorgang geschieht per direktem Zugriff auf \gls{github} über ein asymmetrisches Authentifizierungsverfahren. Dazu muss im jeweiligen \gls{github} Projekt der Public Key hinterlegt werden. Im Deployment-Vorgang loggt sich der \gls{ape} Service über SSH in die \gls{ape} Repositories ein. Auch dazu wird ein asymmetrisches Authentifizierungsverfahren verwendet.
+
+Schließlich gibt es außerdem die Staging- und Produktivsysteme der Kunden. Je nach Projekt ein \gls{stagingsystem} für den Testbetrieb und ein \gls{produktivsystem} für die für die Welt sichtbare Webseite. Daten werden ausschließlich von den \gls{ape} Repositories zum entsprechenden Zielsystem transferiert. Dieser Transfer geschieht je nach Kundenwunsch entweder über \gls{ftp} oder \gls{rsync}.
+
+Damit sind alle Komponenten betrachtet. Je nach Kunde kann es Abweichungen geben aber das Gesamtbild bleibt gleich. \gls{ape} Service und \gls{ape} Repositories könnten zum Beispiel auf dem selben System liegen. Aus Flexibilitätsgründen wurde jedoch die vorliegende Variante implementiert.
 
 % subsection architektur (end)
 
@@ -192,14 +210,14 @@ Aus \lstinline!ref! lässt sich der Branchname ableiten. Ist dieser weder \lstin
 
 Ist \lstinline!dev! der abgeleitete Branchname, wurde ein Feature in diesen Branch gemerged und muss gestaged werden. Das Feature muss aus dem Inhalt des Commits abgeleitet werden. \gls{github} erzeugt bei akzeptierten Pull Requests Commit-Nachrichten der Form \lstinline!"Merge pull request #1 from <reponame>/<featurebranch>"!. Da diese Zeile immer gleich aufgebaut ist, lässt sich so zuverlässig der Featurebranch ermitteln.
 
-Ähnlich verhält es sich, wenn \lstinline!live! der abgeleitete Branchname ist. Lediglich die Nachricht hat nun eine andere Form, da diese nicht durch einen Pull Request, sondern durch einen vom \gls{ape} durchgeführten \lstinline!git merge! generiert wird. Eine Nachricht hat die feste Struktur \lstinline!"Merge branch '<featurebranch>'"! und kann damit ohne Probleme geparsed werden. Schließlich wird der \lstinline!live! Branch auf das Produktivsystem deployed.
+Ähnlich verhält es sich, wenn \lstinline!live! der abgeleitete Branchname ist. Lediglich die Nachricht hat nun eine andere Form, da diese nicht durch einen Pull Request, sondern durch einen vom \gls{ape} durchgeführten \lstinline!git merge! generiert wird. Eine Nachricht hat die feste Struktur \lstinline!"Merge branch '<featurebranch>'"! und kann damit ohne Probleme geparsed werden. Schließlich wird der \lstinline!live! Branch auf das \gls{produktivsystem} deployed.
 
 % subsubsection interpretation_von_git_commits (end)
 
 \subsubsection{Staging und Produktiv-Deployment} % (fold)
 \label{ssub:staging_und_produktiv_deployment}
 
-Die Vorgänge beim Deployment unterscheiden sich kaum. Der Vorgang des Produktiv-Deployment, also das Deployen des \lstinline!live! Branches in das Produktiv-System, enthält einen zusätzlichen Schritt, daher wird dies als Beispiel herangezogen.
+Die Vorgänge beim Deployment unterscheiden sich kaum. Der Vorgang des Produktiv-Deployment, also das Deployen des \lstinline!live! Branches in das \gls{produktivsystem}, enthält einen zusätzlichen Schritt, daher wird dies als Beispiel herangezogen.
 
 Zunächst öffnet \gls{ape} einen SSH Tunnel, um sich in den \gls{reposerver} einzuloggen. Dort wird, falls er noch nicht existiert, ein Ordner für das Projekt angelegt. Mit \lstinline!git status! wird anschließend überprüft, ob das Projekt bereits aus \gls{github} geklont wurde. Falls nicht, wird dies nun nachgeholt. Sollte dies fehlschlagen, gibt es ein Authentifizierungsproblem zwischen \gls{ape} und \gls{github}, welches behoben werden muss. Erst dann kann der Vorgang fortgesetzt werden.
 

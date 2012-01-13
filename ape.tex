@@ -59,6 +59,8 @@ style=altlist
 \newcommand{\code}[1]{\texttt{\footnotesize{#1}}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \newcommand{\comment}[1]{}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+  \node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
 
 \definecolor{grey}{rgb}{0.3,0.3,0.3}
 \definecolor{lightgrey}{rgb}{0.8,0.8,0.8}
