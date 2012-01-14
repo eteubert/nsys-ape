@@ -6,6 +6,8 @@ xetex:
 	xelatex -interaction=nonstopmode $(MAINDOC)
 	makeglossaries $(MAINDOC)
 	xelatex -interaction=nonstopmode $(MAINDOC)
+	# 3rd run for glossaries to appear in TOC
+	# xelatex -interaction=nonstopmode $(MAINDOC)
 
 	make clean
 latex:

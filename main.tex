@@ -19,21 +19,43 @@ Insgesamt wird ein Service entwickelt, welcher die bereits genutzten Systeme Git
 \subsection{Konzepte} % (fold)
 \label{sub:konzepte}
 
+\gls{ape} ist ein Deployment-System. Dieses Kapitel erklärt, was das ist und welche Teilaufgabe davon \gls{ape} übernommt.
+
 \subsubsection{Deployment} % (fold)
 \label{ssub:deployment}
 
-	% - Deployment = …
+Deployment ist ein englischsprachiger Begriff. \emph{to deploy} kann mit \emph{einsetzen} und \emph{anwenden} übersetzt werden.
+
+Im Bereich der Softwareentwicklung beschreibt es den Vorgang, ein entwickeltes Projekt oder Teilprojekt in einen Zustand zu überführen, so dass es vom Endbenutzer eingesetzt werden kann.
+
+Arbeitet ein Entwickler an einem Projekt, so geschieht dies unter Idealbedingungen. Er hat seine lokalen Werkzeuge zur Verfügung und kann seine Arbeitsumgebung so konfigurieren, dass das Projekt am besten funktioniert. Diese Bedingungen unterscheiden sich jedoch vom \gls{produktivsystem}. Diese Tatsache muss beim Deployment beachtet werden.
+
+Wird in Sprachen entwickelt, welche kompiliert werden müssen, entstehen zusätzliche Schwierigkeiten. Der korrekte Compiler muss in der korrekten Version verwendet werden. Während der Entwickler in der Programmierphase den Compile-Button seiner \gls{ide} verwenden kann, steht diese Funktion dem Endbenutzer nicht zur Verfügung. Dieser ist auf eine ausführbare Datei angewiesen.
+
+Im Rahmen dieser Arbeit werden jedoch ausschließlich Webprojekte besprochen. Diese werden dynamisch interpretiert, nicht compiliert. Damit entfällt die besprochene Hürde.
+
+Webentwicklung erfordert, dass das Projektverzeichnis zum Zielsystem übertragen wird. Dies geschieht entweder manuell oder automatisiert. Letztgenanntes ist erstrebenswert. Der Grund dafür wird unter Anderem in Kapitel \ref{ssub:continuous_deployment} besprochen.
 
 % subsubsection deployment (end)
 
 \subsubsection{Continuous Deployment} % (fold)
 \label{ssub:continuous_deployment}
 
-	% - Aufwand des Deployments senken durch Automatisierung
-	% - mehr Automatisierung -> weniger Fehleranfällig, da keine Flüchtigkeitsfehler auftreten können
-	% - Kleinere Iterationszyklen ermöglichen
-	% - gesteigerte Kundenintegration für Vertrauen und Sicherheit
-	% - Ergänzung zu Continuous Integration
+Mit wachsender Projektgröße steigt der Aufwand des Deployments. Außerdem besteht immer die Gefahr, dass beim Einspielen einer neuen Versions in das \gls{produktivsystem} Fehler entstehen. Je größer die Änderungen, desto höher ist die Wahrscheinlichkeit der Einführung neuer Fehler\comment{externe ref}. Continuous Deployment versucht, diese Probleme zu lösen oder zumindest einzugrenzen.
+
+\emph{Continuous}, englisch \emph{kontinuierlich}, \emph{ständig} oder \emph{stetig}, beschreibt einen wesentlichen Aspekt. Es ist üblich, in Releases zu denken. Das heißt, es wird für Wochen oder Monate im Voraus geplant, woran gearbeitet wird. Erst, wenn dieser Plan abgearbeitet wurde, werden alle Änderungen zugleich deployed. Dies ist im Bereich des Webs aber weder erforderlich noch wünschenswert.
+
+Es gibt mehrere Gründe, diesen Ansatz zu vermeiden. Zum einen steigt, wie bereits erwähnt, mit der Größe der Änderungen auch die Wahrscheinlichkeit eines Fehlers. Zum anderen muss Releasemanagement betrieben werden, um kritische Patches sowohl im \gls{produktivsystem} als auch im gerade entwickelten Release einfließen zu lassen. Weiterhin ist es im Sinne des Endkunden, wenn dieser schneller von neuen Features profitiert. Schließlich ist es um so schwieriger, einen Fehler einer Änderung zuzuordnen, je mehr Änderungen mit einem Mal deployed werden.
+
+Mit Continuous Deployment ist es möglich, täglich oder sogar mehrmals täglich kleine Änderungen zu veröffentlichen. Kritische Patches können sofort im normalen Entwicklungsprozess behandelt werden. Endbenutzer profitieren sofort von Features. Auftretende Fehler können leichter der soeben eingeführten Änderung zugeordnet werden.
+
+Dies ist jedoch nur realisierbar, wenn der Aufwand des Deployments klein ist. Das heißt, es soll so viel wie möglich automatisiert werden. Je weniger der Entwickler eingreifen muss, desto mehr Zeit kann er mit der Entwicklung von Features verbringen. Ist der Aufwand des Deployments zu groß, wird der Entwickler verleitet, mehrere Features zu einem Release zusammenzufassen, was dem Grundgedanken des Continuous Deployments widerspricht. Es handelt sich hierbei um eine psychologische Schranke. Mit anderen Worten, es ist für jeden Entwickler eine andere Interpretation von \emph{zu groß} notwendig. Schließlich kann nur das Ziel verfolgt werden, den Aufwand immer weiter zu verringern.
+
+Angenommen, es existiert ein Deployment-System mit genügend geringem Aufwand, so dass kein Entwickler dazu tendiert, das System zu umgehen. Dann ist es auch möglich, auf beliebig viele Systeme zu deployen. Das ermöglicht die Existenz eines \glspl{stagingsystem}. Dieses kann identisch zum \gls{produktivsystem} sein -- mit dem einzigen Unterschied, dass es für Endbenutzer nicht erreichbar ist. Dann kann eine Änderung zuerst dorthin deployed und unter realistischen Bedingungen getestet werden. So können Fehler bereits auf diesem System entdeckt und behoben werden, bevor das neue Feature das \gls{produktivsystem} erreicht.
+
+Das wiederum erlaubt eine größere Flexibilität im Arbeitsablauf. Eine \gls{qa} Abteilung kann selbstständig ein Testverfahren entwickeln und dieses jedes Mal durchlaufen, wenn eine neue Änderung das \gls{stagingsystem} erreicht.
+
+\gls{ape} kommt zum Einsatz, um Continuous Deployment zu ermöglichen. Deployment wird vollkommen automatisiert. Ein Projekt muss lediglich zu Beginn einmalig konfiguriert werden. Anschließend übernimmt \gls{ape} das Deployment. Wie das möglich ist, wird ab Kapitel \ref{sec:architektur_und_umsetzung} erläutert.
 
 % subsubsection continuous_deployment (end)
 
@@ -42,25 +64,84 @@ Insgesamt wird ein Service entwickelt, welcher die bereits genutzten Systeme Git
 \subsection{Werkzeuge} % (fold)
 \label{sub:werkzeuge}
 
+Nachfolgend werden einige Werkzeuge und Teile derer Funktionen erläutert, die zum Verständnis der Arbeit notwendig sind.
+
 \subsubsection{SSH \& Asymmetrische Authentifizierung} % (fold)
 \label{ssub:ssh_&_asymmetrische_authentifizierung}
+
+Wie in Kapitel \ref{sub:architektur} gezeigt wird, müssen verschiedene Systeme miteinander kommunizieren. Diese Kommunikation muss sowohl automatisch, als auch sicher stattfinden.
+
+An mehreren Stellen wird \gls{ssh} zum Einsatz kommen. Dieses Protokoll erfüllt die genannten Bedingungen. Die Kommunikation ist mächtig, da über das Protokoll Shell-Befehle ausgeführt werden können. Die Authentifizierung kann durch die Verwendung eines asymmetrischen Schlüsselpaars automatisiert werden. Bei einer passwortbasierten Authentifizierung muss das Passwort interaktiv eingegeben werden, was eine Automatisierung verhindert. Asymmetrische Automatisierung gilt weiterhin als sicher.\comment{externe referenz}
 
 % subsubsection ssh_&_asymmetrische_authentifizierung (end)
 
 \subsubsection{git} % (fold)
 \label{ssub:git}
 
+Ein zentrales Werkzeug des Workflows ist \gls{git}. Es wird zur dezentralen Versionskontrolle verwendet. Im Zusammenspiel mit \gls{github} bildet es die Basis des Workflows.
+
+Zum Verständnis der weiteren Arbeit ist es notwendig, einige grundlegende Kommandozeilenbefehle zu verstehen. Diese werden nun erklärt.
+
+\paragraph{\lstinline!git clone <repository>!} % (fold)
+\label{par:git_clone}
+Klont ein \gls{repository} in ein lokales Verzeichnis. Dabei wird die Referenz zum Ursprungsrepository behalten, so dass dieses nicht bei jedem weiteren Befehl angegeben werden muss. Um es dennoch referenzieren zu können, bekommt es den Namen \lstinline!origin! und kann bei Bedarf damit angesprochen werden.
+% paragraph git_clone (end)
+
+\paragraph{\lstinline!git pull!} % (fold)
+\label{par:git_pull}
+Holt alle Änderungen aus dem \gls{repository} (im Rahmen dieser Arbeit ausschließlich \gls{github}).
+% paragraph git_pull (end)
+
+\paragraph{\lstinline!git push!} % (fold)
+\label{par:git_push}
+Sendet Änderungen aller lokalen Branches mit korrespondierendem entfernten Branch zum entsprechenden \gls{repository} (im Rahmen dieser Arbeit ausschließlich \gls{github}).
+% paragraph git_push (end)
+
+\paragraph{\lstinline!git checkout [-b] <branch>!} % (fold)
+\label{par:git_checkout}
+Holt einen Branch in das \gls{working directory}. Mit anderen Worten, es wird der angegebene Branch aktiviert und damit der Projektstatus dieses Branches hergestellt.
+
+Wird der Parameter \lstinline!-b! verwendet, passieren zwei Dinge. Zuerst wird ein Branch des angegebenen Namens erstellt. Anschließend wird dieser ausgecheckt. In Kapitel \ref{ssub:staging_und_produktiv_deployment} wird folgender Befehl benötigt: \lstinline!git checkout -b live origin/live!. Dabei bezeichnet \lstinline!live! den lokal zu erstellenden Branch und \lstinline!origin/live! den aus\-zu\-check\-en\-den Branch auf \gls{github}.
+
+% paragraph git_checkout (end)
+
+\paragraph{\lstinline!git status!} % (fold)
+\label{par:git_status}
+Zeigt den Status des aktuellen \glspl{working directory}.
+% paragraph git_status (end)
+
 % subsubsection git (end)
 
 \subsubsection{rsync} % (fold)
 \label{ssub:rsync}
+
+Um Daten von einem lokalen zu einem entfernten System zu kopieren, kann rsync verwendet werden. Es unterstützt rekursive Datentransfers, sowie Authentifizierung über \gls{ssh}.
+
+Rsync wird zum Einsatz kommen, um Projektverzeichnisse auf Zielsysteme zu kopieren. Dies ist jedoch nur möglich, wenn diese \gls{ssh}-Authentifizierung unterstützen. Als Alternative kommt \gls{ftp} (Kapitel \ref{ssub:ftp}) zum Einsatz.
 
 % subsubsection rsync (end)
 
 \subsubsection{FTP} % (fold)
 \label{ssub:ftp}
 
+\gls{ftp} kommt im Rahmen dieser Arbeit als Ausweichsoption für \gls{rsync} zum Einsatz. Es wird benutzt, um Projektverzeichnisse von einem lokalen System auf ein Zielsystem zu kopieren. Die Authentifizierung findet über einen Benutzernamen sowie ein Passwort statt. \gls{ftp} ist langsamer als \gls{rsync}, kommt also nur zum Einsatz, wenn \gls{rsync} nicht möglich ist.
+
 % subsubsection ftp (end)
+
+\subsubsection{Ruby \& Ruby on Rails} % (fold)
+\label{ssub:ruby_ruby_on_rails}
+
+% subsubsection ruby_ruby_on_rails (end)
+
+\subsubsection{WordPress} % (fold)
+\label{ssub:wordpress}
+
+% ist weder Werkzeug noch Konzept ...
+% PHP
+% Plugins & Themes
+% wp-content Struktur ? > http://www.texample.net/tikz/examples/filesystem-tree/
+
+% subsubsection wordpress (end)
 
 % subsection werkzeuge (end)
 
@@ -80,8 +161,6 @@ Das folgende Kapitel behandelt die Details des entstandenen Services. Zunächst 
 \subsubsection{\gls{inps}} % (fold)
 \label{ssub:inps}
 
-% subsubsection inps (end)
-
 Die \gls{inps} ist eine deutsche \gls{wp}-Agentur. Sie nimmt Aufträge von Kunden aller Größe an, um ihre Webseitenwünsche im \gls{cms} \gls{wp} umzusetzen. Die Auftragsbreite reicht von kleinen Pluginentwicklungen bis hin zur Konzeption und Umsetzung ganzer Blognetzwerke und Shopsysteme.
 
 Ihre Mitarbeiter befinden sich verteilt in Mitteleuropa und arbeiten vorwiegend von zuhause. Damit arbeitet die \gls{inps} dezentral. Um je nach Auftragslage flexibel handeln zu können, werden mehr freie als fest angestellte Mitarbeiter beschäftigt.
@@ -93,36 +172,75 @@ Der optimale Informationsfluss (Abbildung~\ref{fig:ideale-beziehung}) ist jedoch
 Im Folgenden wird nicht mehr zwischen Fehlerbericht und Featureanfrage unterschieden werden. Aus Sicht des Arbeitsablaufs gibt es keinen Unterschied, daher ist es unnötig, beide Fälle zu betrachten. Es wird nur noch von Features die Rede sein.
 
 \begin{figure}
-	\begin{tikzpicture}[auto]
-		\node (pm) {Projektleiter};
-		\node (customer) [left=of pm] {Kunde}
-			edge [<->] (pm)
-		;
-		\node (dev) [right=of pm] {Entwickler}
-			edge [<->] (pm)
-		;
-	\end{tikzpicture}
-	\caption{Optimaler Informationsfluss}
-	\label{fig:ideale-beziehung}
+	\centering
+	\subfloat[Optimal] {
+		\label{fig:ideale-beziehung}
+		\begin{tikzpicture}%[scale=1.0,transform shape]
+			\node (pm) {Projektleiter};
+			\node (customer) [below=of pm] {Kunde}
+				edge [<->] (pm)
+			;
+			\node (dev) [above=of pm] {Entwickler}
+				edge [<->] (pm)
+			;
+		\end{tikzpicture}
+	}
+	\subfloat[Tatsächlich] {
+		\label{fig:tatsaechliche-beziehung}
+		\begin{tikzpicture}%[scale=1.0,transform shape]
+			\node (center) {};
+			\node (customer)	[left=of center]	{Kunde};
+			\node (dev) 		[right=of center]	{Entwickler};
+			\node (bc)			[above=of center]	{Basecamp}
+				edge [<->,bend right] (customer)
+				edge [<->,bend left] (dev)
+			;
+			\node (pm)			[below=of center]	{Projektleiter}
+				edge [<->,bend left] (customer)
+				edge [<->,bend right] (dev)
+			;
+		\end{tikzpicture}
+	}
+	
+	\caption{Optimaler und tatsächlicher Informationsfluss}
+	\label{fig:personen_beziehungen}
 \end{figure}
 
-\begin{figure}
-	\begin{tikzpicture}[auto]
-		\node (center) {};
-		\node (customer)	[left=of center]	{Kunde};
-		\node (dev) 		[right=of center]	{Entwickler};
-		\node (bc)			[above=of center]	{Basecamp}
-			edge [<->,bend right] (customer)
-			edge [<->,bend left] (dev)
-		;
-		\node (pm)			[below=of center]	{Projektleiter}
-			edge [<->,bend left] (customer)
-			edge [<->,bend right] (dev)
-		;
-	\end{tikzpicture}
-	\caption{Tatsächlicher Informationsfluss}
-	\label{fig:tatsaechliche-beziehung}
-\end{figure}
+% \begin{figure}
+% 	\centering
+% 	\begin{tikzpicture}[auto]
+% 		\node (pm) {Projektleiter};
+% 		\node (customer) [left=of pm] {Kunde}
+% 			edge [<->] (pm)
+% 		;
+% 		\node (dev) [right=of pm] {Entwickler}
+% 			edge [<->] (pm)
+% 		;
+% 	\end{tikzpicture}
+% 	\caption{Optimaler Informationsfluss}
+% 	\label{fig:ideale-beziehung}
+% \end{figure}
+% 
+% \begin{figure}
+% 	\centering
+% 	\begin{tikzpicture}[auto]
+% 		\node (center) {};
+% 		\node (customer)	[left=of center]	{Kunde};
+% 		\node (dev) 		[right=of center]	{Entwickler};
+% 		\node (bc)			[above=of center]	{Basecamp}
+% 			edge [<->,bend right] (customer)
+% 			edge [<->,bend left] (dev)
+% 		;
+% 		\node (pm)			[below=of center]	{Projektleiter}
+% 			edge [<->,bend left] (customer)
+% 			edge [<->,bend right] (dev)
+% 		;
+% 	\end{tikzpicture}
+% 	\caption{Tatsächlicher Informationsfluss}
+% 	\label{fig:tatsaechliche-beziehung}
+% \end{figure}
+
+% subsubsection inps (end)
 
 \subsubsection{Entwicklung eines Features} % (fold)
 \label{ssub:entwicklung_eines_features}
@@ -171,7 +289,7 @@ Das in dieser Arbeit betrachtete Gesamtsystem kann in sechs Komponenten untertei
 
 \begin{figure}
 	\includegraphics[width=1.0\textwidth]{assets/ape_network.eps}
-	\caption{\gls{ape} Netzwerk}
+	\caption{APE Netzwerk}
 	\label{fig:ape_network}
 \end{figure}
 
