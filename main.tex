@@ -16,6 +16,8 @@ Insgesamt wird ein Service entwickelt, welcher die bereits genutzten Systeme Git
 \section{Konzepte und Werkzeuge} % (fold) 8+ Seiten, Allgemeines Kapitel
 \label{sec:konzepte_und_werkzeuge}
 
+Dieses Kapitel widmet sich den Grundlagen, die zum Verständnis der nachfolgenden Arbeit notwendig sind. Der Leser möge selbst entscheiden, wie vertraut er mit der jeweiligen Thematik bereits ist und bei Bedarf lediglich querlesen oder ganz überspringen.
+
 \subsection{Konzepte} % (fold)
 \label{sub:konzepte}
 
@@ -131,15 +133,54 @@ Rsync wird zum Einsatz kommen, um Projektverzeichnisse auf Zielsysteme zu kopier
 \subsubsection{Ruby \& Ruby on Rails} % (fold)
 \label{ssub:ruby_ruby_on_rails}
 
+\gls{ape} wird mit \gls{ror} entwickelt.
+
+\gls{ror} ist ein Open Source Full-Stack Web Application Framework für die Programmiersprache Ruby. Full-Stack bedeutet, dass das Framework -- und damit der Programmierer -- Zugriff auf Informationen des Webservers hat, Datenbankabfragen senden kann und ein Templatingsystem mitbringt.
+
+Das Framework wurde ursprünglich aus dem Projekt \gls{basecamp} extrahiert, welches in dieser Arbeit auch besprochen wird. Das ist jedoch ein zufälliges Zusammentreffen. \gls{ape} hätte auch in einem anderen Framework implementiert werden können. \gls{ror} wurde insbesondere auf Basis der vorhandenen Kenntnisse des Entwicklers ausgewählt.
+
 % subsubsection ruby_ruby_on_rails (end)
 
 \subsubsection{WordPress} % (fold)
 \label{ssub:wordpress}
 
-% ist weder Werkzeug noch Konzept ...
-% PHP
-% Plugins & Themes
-% wp-content Struktur ? > http://www.texample.net/tikz/examples/filesystem-tree/
+\begin{wrapfigure}{l}{0.45\textwidth}
+	\begin{tikzpicture}[%
+		grow via three points={one child at (0.5,-0.7) and
+		two children at (0.5,-0.7) and (0.5,-1.4)},
+		edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+		\tikzstyle{every node}=[anchor=west]
+		\node {wp-content/}
+		child { node {index.php}}		
+		child { node {plugins/}
+			child  { node {akismet/}}
+			child  { node {bbPress/}}
+		}
+		child [missing] {}				
+	    child [missing] {}
+		child { node {themes/}
+			child  { node {twentyeleven/}}
+			child  { node {twentyten/}}
+		}
+		child [missing] {}				
+	    child [missing] {}
+		child { node {upgrade/}}
+		child { node {uploads/}}
+		;
+	\end{tikzpicture}
+	 \caption{Beispiel \lstinline!wp-content! Verzeichnis}
+	 \label{fig:example_wp_content_dir}
+\end{wrapfigure}
+
+\gls{ape} wird darauf ausgelegt, \gls{wordpress}-Systeme zu deployen. Das heißt nicht, dass keine anderen Systeme damit verwaltet werden können. Da vorerst jedoch ausschließlich auf \gls{wordpress} basierende Projekte zum Einsatz kommen sollen, wird auch im Rahmen dieser Arbeit nichts anderes betrachtet.
+
+\gls{wordpress} ist eine freie Open Source Blogging Plattform und \gls{cms} auf Basis von \gls{php} und \gls{mysql}. Unter anderem wegen seiner Plugin-Architektur und seinem Template-System eignet es sich, um verschiedenste Ansprüche erfüllen zu können.
+
+Für das \gls{deployment} ist lediglich der Ordner \lstinline!wp-content! von Bedeutung. Alle außerhalb dieses Ordners liegenden Dateien gehören zu \gls{wordpress} selbst und sollten nie verändert werden, da sie nach einen \gls{wordpress} Update ohnehin wieder zurückgesetzt werden würden. Die einzige Ausnahme ist die Datei \lstinline!wp-config.php!, welche systembezogene Konfigurationen, wie Datenbank-Zugangsdaten, enthält.
+
+Themes sind Dateien, welche Design und Funktionalität einer \gls{wordpress} Seite definieren. Plugins können unabhängig vom Theme eine Seite um Funktionalität erweitern oder bestehende Features verändern.
+
+Veränderungen an der Datenbank werden von den Plugins und Themes selbst administriert. Das ist vorteilhaft, da das \gls{deployment} sich dann nicht darum kümmern muss. Es ist ausreichend, das \lstinline!wp-content! Verzeichnis zu aktualisieren.
 
 % subsubsection wordpress (end)
 
@@ -161,7 +202,7 @@ Das folgende Kapitel behandelt die Details des entstandenen Services. Zunächst 
 \subsubsection{\gls{inps}} % (fold)
 \label{ssub:inps}
 
-Die \gls{inps} ist eine deutsche \gls{wp}-Agentur. Sie nimmt Aufträge von Kunden aller Größe an, um ihre Webseitenwünsche im \gls{cms} \gls{wp} umzusetzen. Die Auftragsbreite reicht von kleinen Pluginentwicklungen bis hin zur Konzeption und Umsetzung ganzer Blognetzwerke und Shopsysteme.
+Die \gls{inps} ist eine deutsche \gls{wordpress}-Agentur. Sie nimmt Aufträge von Kunden aller Größe an, um ihre Webseitenwünsche im \gls{cms} \gls{wordpress} umzusetzen. Die Auftragsbreite reicht von kleinen Pluginentwicklungen bis hin zur Konzeption und Umsetzung ganzer Blognetzwerke und Shopsysteme.
 
 Ihre Mitarbeiter befinden sich verteilt in Mitteleuropa und arbeiten vorwiegend von zuhause. Damit arbeitet die \gls{inps} dezentral. Um je nach Auftragslage flexibel handeln zu können, werden mehr freie als fest angestellte Mitarbeiter beschäftigt.
 
