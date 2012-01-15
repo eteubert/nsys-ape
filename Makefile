@@ -3,11 +3,11 @@ MAINDOC = ape
 all:
 	make xetex
 xetex:	
-	xelatex -interaction=nonstopmode $(MAINDOC)
+	xelatex -no-pdf -interaction=nonstopmode $(MAINDOC)
+	bibtex $(MAINDOC)
 	makeglossaries $(MAINDOC)
+	xelatex -no-pdf -interaction=nonstopmode $(MAINDOC)
 	xelatex -interaction=nonstopmode $(MAINDOC)
-	# 3rd run for glossaries to appear in TOC
-	# xelatex -interaction=nonstopmode $(MAINDOC)
 
 	make clean
 latex:
@@ -20,6 +20,8 @@ clean:
 	rm -f $(MAINDOC).aux
 	rm -f $(MAINDOC).acn
 	rm -f $(MAINDOC).acr
+	rm -f $(MAINDOC).bbl
+	rm -f $(MAINDOC).blg
 	rm -f $(MAINDOC).alg
 	rm -f $(MAINDOC).glg
 	rm -f $(MAINDOC).glo
@@ -33,3 +35,4 @@ clean:
 	rm -f $(MAINDOC).pdfsync
 	rm -f $(MAINDOC).ps
 	rm -f $(MAINDOC).toc
+	rm -f $(MAINDOC).xdv
