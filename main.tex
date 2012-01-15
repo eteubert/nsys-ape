@@ -478,7 +478,7 @@ Da all das vollautomatisiert ablaufen muss, wurde ein Algorithmus entwickelt, we
 	{printf " %s", $x} printf "\n" }'
 \end{lstlisting}
 
-Der find\comment{externe referenz bietet sich an} Befehl schließt mit Hilfe der Parameter \lstinline!-path '*/.git*' -prune! das git Verzeichnis aus der Ergebnisliste aus. Außerdem wird mit \lstinline!-ls! eine detailliertere Ausgabe erzwungen, da die Information benötigt wird, ob ein gefundenes Objekt eine Datei oder ein Verzeichnis ist. Mit Hilfe von awk\comment{externe referenz bietet sich an} wird die Ausgabe auf die Dateimodi, sowie den Pfad reduziert. Eine Beispielausgabe ist in Listing \ref{lst:gen_path_list_example} zu sehen.
+Der \gls{find}\comment{externe referenz bietet sich an} Befehl schließt mit Hilfe der Parameter \lstinline!-path '*/.git*' -prune! das git Verzeichnis aus der Ergebnisliste aus. Außerdem wird mit \lstinline!-ls! eine detailliertere Ausgabe erzwungen, da die Information benötigt wird, ob ein gefundenes Objekt eine Datei oder ein Verzeichnis ist. Mit Hilfe von \gls{awk}\comment{externe referenz bietet sich an} wird die Ausgabe auf die Dateimodi, sowie den Pfad reduziert. Eine Beispielausgabe ist in Listing \ref{lst:gen_path_list_example} zu sehen.
 
 \begin{lstlisting}[caption=Beispielausgabe für gefundene Pfade,label={lst:gen_path_list_example}]
 	drwxr-xr-x ./bar
