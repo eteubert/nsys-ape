@@ -1,15 +1,17 @@
 \section{Einleitung} % (fold)
 \label{sec:einleitung}
 
-Das Projekt entsteht im Auftrag der Agentur \gls{inps}. Diese erhofft sich Kosteinersparnis durch Automatisierung, sowie eine solidere rechtliche Basis gegenüber ihren Kunden.
+Das Projekt entsteht im Auftrag der Agentur \gls{inps}. Diese erhofft sich Kostenersparnis durch Automatisierung, sowie eine solidere rechtliche Basis gegenüber ihren Kunden.
 
-Automatisierung wird an verschiedenen Stellen eingeführt. Da bereits das Versionskontrollsystem git verwendet wird, werden dessein Eigenschaften ausgenutzt. Hält ein Entwickler ein Feature für abgeschlossen, stellt er über den Service GitHub einen so genannten Pull Request. Alle am Projekt beteiligten Entwickler werden benachrichtigt und können Anmerkungen und sogar Änderungen vornehmen, bevor das Feature gemerged wird. Dies geschieht automatisch. Außerdem wird im Projektmanagement-Tool Basecamp eine zum Pull Request passende ToDo erstellt. Der Kunde wird außerdem per E-Mail benachrichtigt.
+Automatisierung wird an verschiedenen Stellen eingeführt. Da bereits das Versionskontrollsystem git verwendet wird, werden dessen Eigenschaften ausgenutzt. Hält ein Entwickler ein Feature für abgeschlossen, stellt er über den Service GitHub einen so genannten Pull Request. Alle am Projekt beteiligten Entwickler werden benachrichtigt und können Anmerkungen und sogar Änderungen vornehmen, bevor das Feature übernommen wird. Dies geschieht automatisch. Außerdem wird im Projektmanagement-Tool Basecamp eine zum Pull Request passende To-do erstellt. Der Kunde wird darüber sofort per E-Mail benachrichtigt.
 
-Letztgenannter Part ist insbesondere rechtlich interessant. Der Kunde kann das Feature nun in einer separaten Testumgebung ansehen und eventuell von seiner eigenen \gls{qa}-Abteilung verifizieren lassen. Ist der Kunde zufrieden, hakt er die ToDo ab und gibt damit sein Einverständnis. Es kann vertraglich geregelt werden, dass der Kunde sich der Qualität des Features versichert hat und somit die \gls{inps} keinerlei Kosten für eventuell auf diesem Feature basierenden Ausfällen übernimmt.
+Dieser Part ist insbesondere rechtlich interessant. Der Kunde kann das Feature nun in einer separaten Testumgebung ansehen und eventuell von seiner eigenen \gls{qa}-Abteilung verifizieren lassen. Ist der Kunde zufrieden, hakt er die To-do ab und gibt damit sein Einverständnis. Es kann vertraglich geregelt werden, dass der Kunde sich der Qualität des Features versichert hat und somit die \gls{inps} keinerlei Kosten für eventuell auf diesem Feature basierenden Ausfälle übernimmt.
 
-Die Bestätigung des Kunden löst einen weiteren Automatisierungsmechanismus auf. Das Feature wird in den produktiven Versionierungszweig gemerged und sofort auf das \gls{produktivsystem} deployed. Der Entwickler muss nichts weiter unternehmen und der Kunde kann sein akzeptiertes Feature ohne Verzögerung betrachten.
+Die Bestätigung des Kunden löst einen weiteren Automatisierungsmechanismus aus. Das Feature wird in den produktiven Versionierungszweig übernommen und auf dem \gls{produktivsystem} aktiviert. Der Entwickler muss nichts weiter unternehmen und der Kunde kann sein akzeptiertes Feature ohne Verzögerung betrachten.
 
-Insgesamt wird ein Service entwickelt, welcher die bereits genutzten Systeme GitHub und Basecamp verbindet und einige Automatisierungen durchführt. Die Integration ist dabei transparent. Weder Kunde noch Entwickler sieht jemals eine grafische Oberfläche des Services. Beide Parteien profitieren jedoch von den Automatisierungen und Absicherungen, welche der Service bietet.
+Insgesamt wird ein Service entwickelt, welcher die bereits genutzten Systeme git, GitHub und Basecamp verbindet und einige Automatisierungen einführt. Die Integration ist dabei transparent. Weder Kunde noch Entwickler sieht jemals eine grafische Oberfläche des Services. Beide Parteien profitieren jedoch von den Automatisierungen und Absicherungen, welche der Service bietet.
+
+\gls{ape} wird als unabhängiger Web-Service mit Hilfe des Frameworks \gls{ror} in der Programmiersprache \gls{ruby} entwickelt. Die Herausforderungen bei der Planung und Implementierungen sind speziell in den zahlreichen Schnittstellen zu finden. Sechs Architekturkomponenten kommunizieren miteinander über Protokolle wie HTTP, SSH und FTP; mit Datenformaten JSON und XML; und Tools wie git und rsync.
 
 % section einleitung (end)
 
@@ -21,12 +23,12 @@ Dieses Kapitel widmet sich den Grundlagen, die zum Verständnis der nachfolgende
 \subsection{Konzepte} % (fold)
 \label{sub:konzepte}
 
-\gls{ape} ist ein Deployment-System. Dieses Kapitel erklärt, was das ist und welche Teilaufgabe davon \gls{ape} übernommt.
+\gls{ape} ist ein Deployment-System. Dieses Kapitel erklärt, was das ist und welche Teilaufgabe davon \gls{ape} übernimmt.
 
 \subsubsection{Deployment} % (fold)
 \label{ssub:deployment}
 
-Deployment ist ein englischsprachiger Begriff. \emph{to deploy} kann mit \emph{einsetzen} und \emph{anwenden} übersetzt werden.
+\gls{deployment} ist ein englischsprachiger Begriff. \emph{to deploy} kann mit \emph{einsetzen} und \emph{anwenden} übersetzt werden.
 
 Im Bereich der Softwareentwicklung beschreibt es den Vorgang, ein entwickeltes Projekt oder Teilprojekt in einen Zustand zu überführen, so dass es vom Endbenutzer eingesetzt werden kann.
 
@@ -43,9 +45,9 @@ Webentwicklung erfordert, dass das Projektverzeichnis zum Zielsystem übertragen
 \subsubsection{Continuous Deployment} % (fold)
 \label{ssub:continuous_deployment}
 
-Mit wachsender Projektgröße steigt der Aufwand des Deployments. Außerdem besteht immer die Gefahr, dass beim Einspielen einer neuen Versions in das \gls{produktivsystem} Fehler entstehen. Je größer die Änderungen, desto höher ist die Wahrscheinlichkeit der Einführung neuer Fehler\comment{externe ref}. Continuous Deployment versucht, diese Probleme zu lösen oder zumindest einzugrenzen.
+Mit wachsender Projektgröße steigt der Aufwand des Deployments. Außerdem besteht immer die Möglichkeit, dass beim Einspielen einer neuen Version in das \gls{produktivsystem} Fehler entstehen. Je größer die Änderungen, desto höher ist die Wahrscheinlichkeit der Einführung neuer Fehler\comment{externe ref}. Continuous Deployment versucht, diese Probleme zu lösen oder zumindest einzugrenzen.
 
-\emph{Continuous}, englisch \emph{kontinuierlich}, \emph{ständig} oder \emph{stetig}, beschreibt einen wesentlichen Aspekt. Es ist üblich, in Releases zu denken. Das heißt, es wird für Wochen oder Monate im Voraus geplant, woran gearbeitet wird. Erst, wenn dieser Plan abgearbeitet wurde, werden alle Änderungen zugleich deployed. Dies ist im Bereich des Webs aber weder erforderlich noch wünschenswert.
+\emph{Continuous}, englisch \emph{kontinuierlich}, \emph{ständig} oder \emph{stetig}, beschreibt einen wesentlichen Aspekt. Es ist in der Software-Entwicklung üblich, in Releases zu denken. Das heißt, es wird für Wochen oder Monate im Voraus geplant, woran gearbeitet wird. Erst, wenn dieser Plan abgearbeitet wurde, werden alle Änderungen zugleich deployed. Dies ist im Bereich des Webs aber weder erforderlich noch wünschenswert.
 
 Es gibt mehrere Gründe, diesen Ansatz zu vermeiden. Zum einen steigt, wie bereits erwähnt, mit der Größe der Änderungen auch die Wahrscheinlichkeit eines Fehlers. Zum anderen muss Releasemanagement betrieben werden, um kritische Patches sowohl im \gls{produktivsystem} als auch im gerade entwickelten Release einfließen zu lassen. Weiterhin ist es im Sinne des Endkunden, wenn dieser schneller von neuen Features profitiert. Schließlich ist es um so schwieriger, einen Fehler einer Änderung zuzuordnen, je mehr Änderungen mit einem Mal deployed werden.
 
@@ -73,7 +75,7 @@ Nachfolgend werden einige Werkzeuge und Teile derer Funktionen erläutert, die z
 
 Wie in Kapitel \ref{sub:architektur} gezeigt wird, müssen verschiedene Systeme miteinander kommunizieren. Diese Kommunikation muss sowohl automatisch, als auch sicher stattfinden.
 
-An mehreren Stellen wird \gls{ssh} zum Einsatz kommen. Dieses Protokoll erfüllt die genannten Bedingungen. Die Kommunikation ist mächtig, da über das Protokoll Shell-Befehle ausgeführt werden können. Die Authentifizierung kann durch die Verwendung eines asymmetrischen Schlüsselpaars automatisiert werden. Bei einer passwortbasierten Authentifizierung muss das Passwort interaktiv eingegeben werden, was eine Automatisierung verhindert. Asymmetrische Automatisierung gilt weiterhin als sicher.\comment{externe referenz}
+An mehreren Stellen wird \gls{ssh} zum Einsatz kommen. Dieses Protokoll erfüllt die genannten Bedingungen. Die Kommunikation ist mächtig, da über das Protokoll Shell-Befehle ausgeführt werden können. Die Authentifizierung kann durch die Verwendung eines asymmetrischen Schlüsselpaars automatisiert werden. Bei einer passwortbasierten Authentifizierung muss das Passwort interaktiv eingegeben werden, was eine Automatisierung verhindert. Asymmetrische Authentifizierung gilt als sicher.\cite{asymmetric_crypto}
 
 % subsubsection ssh_&_asymmetrische_authentifizierung (end)
 
@@ -86,12 +88,12 @@ Zum Verständnis der weiteren Arbeit ist es notwendig, einige grundlegende Komma
 
 \paragraph{\lstinline!git clone <repository>!} % (fold)
 \label{par:git_clone}
-Klont ein \gls{repository} in ein lokales Verzeichnis. Dabei wird die Referenz zum Ursprungsrepository behalten, so dass dieses nicht bei jedem weiteren Befehl angegeben werden muss. Um es dennoch referenzieren zu können, bekommt es den Namen \lstinline!origin! und kann bei Bedarf damit angesprochen werden.
+Klont ein \gls{repository} in ein lokales Verzeichnis. Dabei wird die Referenz zum Ursprungsrepository behalten, so dass dieses nicht bei jedem weiteren Befehl angegeben werden muss. Um es dennoch referenzieren zu können, bekommt es den Namen \emph{origin} und kann bei Bedarf damit angesprochen werden.
 % paragraph git_clone (end)
 
 \paragraph{\lstinline!git pull!} % (fold)
 \label{par:git_pull}
-Holt alle Änderungen aus dem \gls{repository} (im Rahmen dieser Arbeit ausschließlich \gls{github}).
+Holt alle Änderungen aus dem \gls{repository} (im Rahmen des vorgestellten Workflows gibt es nur ein zentrales \gls{repository}: \gls{github}).
 % paragraph git_pull (end)
 
 \paragraph{\lstinline!git push!} % (fold)
@@ -119,7 +121,7 @@ Zeigt den Status des aktuellen \glspl{working directory}.
 
 Um Daten von einem lokalen zu einem entfernten System zu kopieren, kann rsync verwendet werden. Es unterstützt rekursive Datentransfers, sowie Authentifizierung über \gls{ssh}.
 
-Rsync wird zum Einsatz kommen, um Projektverzeichnisse auf Zielsysteme zu kopieren. Dies ist jedoch nur möglich, wenn diese \gls{ssh}-Authentifizierung unterstützen. Als Alternative kommt \gls{ftp} (Kapitel \ref{ssub:ftp}) zum Einsatz.
+Rsync wird zum Einsatz kommen, um Projektverzeichnisse auf Zielsysteme zu kopieren. Dies ist jedoch nur möglich, wenn diese \gls{ssh}-Authentifizierung unterstützen. Als Alternative kommt das \gls{ftp} (Kapitel \ref{ssub:ftp}) zum Einsatz.
 
 % subsubsection rsync (end)
 
@@ -135,7 +137,7 @@ Rsync wird zum Einsatz kommen, um Projektverzeichnisse auf Zielsysteme zu kopier
 
 \gls{ape} wird mit \gls{ror} entwickelt.
 
-\gls{ror} ist ein Open Source Full-Stack Web Application Framework für die Programmiersprache Ruby. Full-Stack bedeutet, dass das Framework -- und damit der Programmierer -- Zugriff auf Informationen des Webservers hat, Datenbankabfragen senden kann und ein Templatingsystem mitbringt.
+\gls{ror} ist ein Open Source Full-Stack Web Application Framework für die Programmiersprache Ruby. Full-Stack bedeutet, dass das Framework -- und damit der Programmierer -- Zugriff auf Informationen des Webservers hat, Datenbankabfragen senden kann und ein Templatingsystem zur Verfügung stellt.
 
 Das Framework wurde ursprünglich aus dem Projekt \gls{basecamp} extrahiert, welches in dieser Arbeit auch besprochen wird. Das ist jedoch ein zufälliges Zusammentreffen. \gls{ape} hätte auch in einem anderen Framework implementiert werden können. \gls{ror} wurde insbesondere auf Basis der vorhandenen Kenntnisse des Entwicklers ausgewählt.
 
@@ -286,7 +288,7 @@ Im Folgenden wird nicht mehr zwischen Fehlerbericht und Featureanfrage unterschi
 \subsubsection{Entwicklung eines Features} % (fold)
 \label{ssub:entwicklung_eines_features}
 
-Abhängig vom Projekt unterscheiden gibt es Abweichungen vom Arbeitsablauf. Doch die prinzipielle Vorgehensweise ist immer die gleiche. Diese wird nun beschrieben.
+Abhängig vom Projekt gibt es Abweichungen im Arbeitsablauf. Doch die prinzipielle Vorgehensweise ist immer die gleiche. Diese wird nun beschrieben.
 
 Der Kunde formuliert die Spezifikation für ein Feature oder eine Menge von Features. Diese werden vom Projekleiter begutachtet und eventuelle Unklarheiten werden im Dialog mit dem Kunden beseitigt. Ist das Projekt bereits fortgeschritten, formuliert der Kunde seine Wünsche direkt im Basecamp. Erfahrungsgemäß sind dies dann nur noch Anpassungen und Fehlerberichte, so dass der Projektleiter nicht mehr jede Anfrage kontrollieren muss.
 
@@ -300,7 +302,7 @@ Diese Vorgehensweise funktioniert, ist jedoch umständlicher als sie sein müsst
 
 Weiterhin besteht im Moment das Problem, dass zwischen Projekten Unterschiede herrschen, die zwar klein aber doch vorhanden sind. Das sorgt dafür, dass Entwickler nicht konfliktfrei zwischen Projekten wechseln können. Es ist immer mit Verwirrung und Absprachen verbunden, die bei geeigneten Konventionen nicht nötig wären.
 
-Dieses Problem soll \gls{ape} lösen. Es ist ein Workflow zu entferfen, welcher Konventionen einführt, der die oben genannten Abläufe vereinheitlicht. Automatisierungen sind, wo möglich, mit Hilfe der Software umzusetzen.
+Dieses Problem soll \gls{ape} lösen. Es ist ein Workflow zu entwerfen, welcher Konventionen einführt, der die oben genannten Abläufe vereinheitlicht. Automatisierungen sind, wo möglich, mit Hilfe der Software umzusetzen.
 
 % subsubsection entwicklung_eines_features (end)
 
@@ -311,22 +313,22 @@ Zunächst wird festgelegt, dass jedes Feature in seinem eigenen \gls{git}-Branch
 
 Weiterhin werden \gls{github} \glspl{pull request} ein fester Bestandteil des Workflows. Dies sind automatisierte Anträge, einen Branch in einen anderen zu mergen. Ein \gls{pull request} zeigt die Versionshistorie des Features und die Summe aller Änderungen. Andere Entwickler können das Feature reviewen, Anmerkungen hinterlassen und selbst Änderungen am Feature vornehmen. Sind alle Entwickler mit der Codequalität zufrieden, wird der \gls{pull request} akzeptiert und \gls{github} merged die Branches automatisch.
 
-Es gibt zwei persistente \gls{git} Branches. \lstinline!dev! und \lstinline!live!. Letztgenannter ist unter allen Umständen stabil zu halten und wird darum nur in Ausnahmefällen manuell beeinflusst. Er ist ein Abbild des \gls{produktivsystem}s. Fertig entwickelte und vom Kunden bestätigte Features werden vom \gls{ape} in ihn gemerged. Analog dazu repräsentiert der \lstinline!dev! Branch das \gls{stagingsystem}. \gls{ape} merged Branches in \lstinline!dev!, wenn auf \gls{github} ein Pull Request akzeptiert wurde.
+Es gibt zwei persistente \gls{git} Branches. \emph{dev} und \emph{live}. Letztgenannter ist unter allen Umständen stabil zu halten und wird darum nur in Ausnahmefällen manuell beeinflusst. Er ist ein Abbild des \gls{produktivsystem}s. Fertig entwickelte und vom Kunden bestätigte Features werden vom \gls{ape} in ihn gemerged. Analog dazu repräsentiert der \emph{dev} Branch das \gls{stagingsystem}. \gls{ape} merged Branches in \emph{dev}, wenn auf \gls{github} ein Pull Request akzeptiert wurde.
 
 Ein \gls{pull request} wird vom Entwickler genau dann erstellt, wenn er mit der Entwicklung eines Features fertig ist und dieses bereit für das \gls{stagingsystem} ist. Wird dieser akzeptiert, sollen automatisch zwei Aktionen geschehen. Zum einen muss das Feature auf dem \gls{stagingsystem} verfügbar werden. Zum anderen soll der Kunde benachrichtigt werden, dass dieses Feature nun bereit zum testen ist. Beide Aufgaben werden vom \gls{ape} übernommen.
 
-Der \gls{ape}-Service wird von GitHub per \Gls{webhook} informiert, dass ein Pull Request akzeptiert wurde. Zuerst wird das \gls{stagingsystem} aktualisiert. Dazu müssen lediglich die Dateien aus dem Staging-Branch übertragen werden, da \gls{github} bereits das Mergen der Branches übernommen hat. Anschließend wird über eine API in \gls{basecamp} ein To-do angelegt, welches den Kunden über das Feature im Testsystem informiert und um Feedback bittet. Basecamp verschickt automatisch eine E-Mail an den Kunden, so dass zwischen Akzeptanz des \glspl{pull request} und der automatischen Benachrichtigung des Kunden lediglich Sekunden oder Minuten liegen.
+Der \gls{ape}-Service wird von GitHub per \Gls{webhook} informiert, dass ein Pull Request akzeptiert wurde. Zuerst wird das \gls{stagingsystem} aktualisiert. Dazu müssen lediglich die Dateien aus dem Staging-Branch übertragen werden, da \gls{github} bereits das Mergen der Branches übernommen hat. Anschließend wird über eine API in \gls{basecamp} eine To-do angelegt, welche den Kunden über das Feature im Testsystem informiert und ihn um Feedback bittet. Basecamp verschickt automatisch eine E-Mail an den Kunden, so dass zwischen Akzeptanz des \glspl{pull request} und der automatischen Benachrichtigung des Kunden lediglich Sekunden oder Minuten liegen.
 
 Gibt es Probleme, kann der Kunde diese über das Kommentarsystem in \gls{basecamp} äußern und der Entwickler kann diese bearbeiten. Ist der Kunde sofort oder nach Behebung aller Probleme zufrieden, kennzeichnet er dies durch das Abhaken der To-do. \gls{ape} registriert die Veränderung des Status der To-do automatisch und beginnt, das Feature auf das \gls{produktivsystem} zu übertragen. Dazu merged er selbstständig den Featurebranch in den Produktivbranch und überträgt das Ergebnis auf das \gls{produktivsystem}.
 
-Damit ist ein Featurezyklus abgeschlossen. Ist das Feature klein (z.B. nur eine Codezeile muss angepasst werden) und reagieren alle Parteien schnell, kann der gesamte Zyklus einschließlich Programmierung in weniger als 15 Minuten abgearbeitet werden. Damit können selbst kritische Änderungen schnell vorgenommen werden. Es können beliebig viele dieser Zyklen parallel aktiv sein und ein Entwickler kann an verschiedenen Features gleichzeitig arbeiten, ohne dass sich deren Entwicklungsweige behindern.
+Damit ist ein Featurezyklus abgeschlossen. Ist das Feature klein (z.B. nur eine Codezeile muss angepasst werden) und reagieren alle Parteien schnell, kann der gesamte Zyklus einschließlich Programmierung in weniger als 15 Minuten abgearbeitet werden. Damit können selbst kritische Änderungen schnell vorgenommen werden. Es können beliebig viele dieser Zyklen parallel aktiv sein und ein Entwickler kann an verschiedenen Features gleichzeitig arbeiten, ohne dass sich deren Entwicklungszweige behindern.
 
 % subsection einheitlicher_workflow (end)
 
 \subsection{Architektur} % (fold)
 \label{sub:architektur}
 
-Das in dieser Arbeit betrachtete Gesamtsystem kann in sechs Komponenten unterteilt werden. Abbildung \ref{fig:ape_network} illustriert diese Unterteilung. Die sechs Komponenten sind: \circled{1} die Entwickler der \gls{inps}, \circled{2} \gls{github}, \circled{3} der \gls{ape}, \circled{4} die \gls{ape} Repositories, \circled{5} \gls{basecamp} und \circled{6} die Staging- und Produktivsysteme der Kunden.
+Das in dieser Arbeit betrachtete Gesamtsystem kann in sechs Komponenten unterteilt werden. Abbildung \ref{fig:ape_network} illustriert diese Unterteilung. Die sechs Komponenten sind: \circled{1} die Entwickler der \gls{inps}, \circled{2} \gls{github}, \circled{3} der \gls{ape}-Service, \circled{4} die \gls{ape} Repositories, \circled{5} \gls{basecamp} und \circled{6} die Staging- und Produktivsysteme der Kunden.
 
 \begin{figure}
 	\includegraphics[width=1.0\textwidth]{assets/ape_network.eps}
@@ -342,7 +344,7 @@ Zwischen den Entwicklern und \gls{github} gibt es zwei Schnittstellen. \gls{git}
 
 Ein Server mit den \gls{ape} Repositories enthält die geklonten \lstinline!git! Repositories. Der Klonvorgang geschieht per direktem Zugriff auf \gls{github} über ein asymmetrisches Authentifizierungsverfahren. Dazu muss im jeweiligen \gls{github} Projekt der Public Key hinterlegt werden. Im Deployment-Vorgang loggt sich der \gls{ape} Service über SSH in die \gls{ape} Repositories ein. Auch dazu wird ein asymmetrisches Authentifizierungsverfahren verwendet.
 
-Schließlich gibt es außerdem die Staging- und Produktivsysteme der Kunden. Je nach Projekt ein \gls{stagingsystem} für den Testbetrieb und ein \gls{produktivsystem} für die für die Welt sichtbare Webseite. Daten werden ausschließlich von den \gls{ape} Repositories zum entsprechenden Zielsystem transferiert. Dieser Transfer geschieht je nach Kundenwunsch entweder über \gls{ftp} oder \gls{rsync}.
+Schließlich gibt es außerdem die Staging- und Produktivsysteme der Kunden. Je nach Projekt existiert ein \gls{stagingsystem} für den Testbetrieb und ein \gls{produktivsystem} für die für die Welt sichtbare Webseite. Daten werden ausschließlich von den \gls{ape} Repositories zum entsprechenden Zielsystem transferiert. Dieser Transfer geschieht je nach Kundenwunsch entweder über \gls{ftp} oder \gls{rsync}.
 
 Damit sind alle Komponenten betrachtet. Je nach Kunde kann es Abweichungen geben aber das Gesamtbild bleibt gleich. \gls{ape} Service und \gls{ape} Repositories könnten zum Beispiel auf dem selben System liegen. Aus Flexibilitätsgründen wurde jedoch die vorliegende Variante implementiert.
 
@@ -355,7 +357,7 @@ Es gibt beliebig viele Ansätze, die zu Anfang genannten Probleme zu lösen. Der
 
 Die Wahl der Werkzeuge ist ausschließlich darin begründet, dass die \gls{inps} diese bereits erfolgreich im Einsatz hat und keinen Grund sieht, diese gegen neue einzutauschen. Es ist denkbar, ein einziges System zu entwickeln, welches die Features aller benötigten Services vereint. Doch der entstandene Mehrnutzen würde den ungleichmäßig höheren Aufwand nicht rechtfertigen.
 
-Interessant wird die Idee des \gls{ape} insbesondere in Beziehung mit \gls{ci} Systemen. Eine häufig verwendete Open Source Anwendung ist \gls{jenkins}\footnote{http://jenkins-ci.org/}. Ist ein solcher Service bereits im Einsatz, bietet sich dieser als Plattform an, um die Konzepte hinter \gls{ape} umzusetzen, zum Beispiel über ein Plugin. Das erspart die Erstellung und Verwaltung einer vollständig neuen Plattform.
+Interessant wird die Idee des \gls{ape} insbesondere in Beziehung mit \gls{ci} Systemen. Eine häufig verwendete Open Source Anwendung ist \gls{jenkins}. Ist ein solcher Service bereits im Einsatz, bietet sich dieser als Plattform an, um die Konzepte hinter \gls{ape} umzusetzen, zum Beispiel über ein Plugin. Das erspart die Erstellung und Verwaltung einer vollständig neuen Plattform.
 % subsection alternativen (end)
 
 % subsection ziel_des_services (end)
@@ -370,47 +372,47 @@ Für die Entwicklung des \gls{ape}-Services sind keine komplizierten Algorithmen
 
 Eine kritische Schnittstelle ist die Kommunikation zwischen \gls{github} und \gls{ape}. Jedes Mal, wenn ein Entwickler eine oder mehrere Änderungen über einen \lstinline!git push! zu \gls{github} transferiert, generiert \gls{github} bei Bedarf eine \gls{json}-formatierte Nachricht mit allen relevanten Informationen zum Repository, sowie zu den im \lstinline!push! enthaltenen Commits. Ein Beispieldatensatz ist in Listing \ref{lst:example_payload} zu sehen.
 
-\begin{lstlisting}[caption=Beispiel-Webhook von \gls{github},label={lst:example_payload}]
-{
-  "before": "f7a3133afc170eebcc97349bae547558088a50cb",
-  "repository": {
-    "url": "http://github.com/inpsyde/ape",
-    "name": "ape",
-    "description": "Automatic Push Environment",
-    "watchers": 5,
-    "forks": 2,
-    "private": 1,
-    "owner": {
-      "email": "e.teubert@inpsyde.com",
-      "name": "eteubert"
-    }
-  },
-  "commits": [
-    {
-      "id": "177e12cbcc29c84765f4232c87efb6a6c4cfb194",
-      "url": "https://github.com/inpsyde/ape/commit/177e\
-				12cbcc29c84765f4232c87efb6a6c4cfb194",
-      "author": {
-        "email": "e.teubert@inpsyde.com",
-        "name": "Eric Teubert"
-      },
-      "message": "escape bash dollars",
-      "timestamp": "2011-12-19T14:57:17-08:00",
-      "added": ["ftp_tree.rb"]
-    }
-  ],
-  "after": "177e12cbcc29c84765f4232c87efb6a6c4cfb194",
-  "ref": "refs/heads/dev"
-}
-\end{lstlisting}
-
 Diese Datensätze kann \gls{github} über einen so genannten Webhook an eine ausgewählte URL senden, zum Beispiel \lstinline!http://www.ape-service.com/github/webhook!. Mit Hilfe der \lstinline!repository!-Informationen wird das zu verwaltende Projekt bestimmt. Aus den Inhalten von \lstinline!ref! und \lstinline!commits! leitet \gls{ape} ab, welche Aktion auszuführen ist.
 
-Aus \lstinline!ref! lässt sich der Branchname ableiten. Ist dieser weder \lstinline!dev! noch \lstinline!live!, wurde ein Feature entweder erstellt oder aktualisiert -- je nachdem, ob \gls{ape} das Feature bereits kennt oder nicht.
+Aus \lstinline!ref! lässt sich der Branch Name ableiten. Ist dieser weder \lstinline!dev! noch \lstinline!live!, wurde ein Feature entweder erstellt oder aktualisiert -- je nachdem, ob \gls{ape} das Feature bereits kennt oder nicht.
 
-Ist \lstinline!dev! der abgeleitete Branchname, wurde ein Feature in diesen Branch gemerged und muss gestaged werden. Das Feature muss aus dem Inhalt des Commits abgeleitet werden. \gls{github} erzeugt bei akzeptierten Pull Requests Commit-Nachrichten der Form \lstinline!"Merge pull request #1 from <reponame>/<featurebranch>"!. Da diese Zeile immer gleich aufgebaut ist, lässt sich so zuverlässig der Featurebranch ermitteln.
+Ist \lstinline!dev! der abgeleitete Branch Name, wurde ein Feature in diesen Branch gemerged und muss gestaged werden. Das Feature muss aus dem Inhalt des Commits abgeleitet werden. \gls{github} erzeugt bei akzeptierten Pull Requests Commit-Nachrichten der Form \lstinline!"Merge pull request #1 from <reponame>/<featurebranch>"!. Da diese Zeile immer gleich aufgebaut ist, lässt sich so zuverlässig der Featurebranch ermitteln.
 
-Ähnlich verhält es sich, wenn \lstinline!live! der abgeleitete Branchname ist. Lediglich die Nachricht hat nun eine andere Form, da diese nicht durch einen Pull Request, sondern durch einen vom \gls{ape} durchgeführten \lstinline!git merge! generiert wird. Eine Nachricht hat die feste Struktur \lstinline!"Merge branch '<featurebranch>'"! und kann damit ohne Probleme geparsed werden. Schließlich wird der \lstinline!live! Branch auf das \gls{produktivsystem} deployed.
+Ähnlich verhält es sich, wenn \lstinline!live! der abgeleitete Branch Name ist. Lediglich die Nachricht hat nun eine andere Form, da diese nicht durch einen Pull Request, sondern durch einen vom \gls{ape} durchgeführten \lstinline!git merge! generiert wird. Eine Nachricht hat die feste Struktur \lstinline!"Merge branch '<featurebranch>'"! und kann damit ohne Probleme geparsed werden. Schließlich wird der \lstinline!live! Branch auf das \gls{produktivsystem} deployed.
+
+\begin{figure}
+	\begin{lstlisting}[caption=Beispiel-Webhook von \gls{github},label={lst:example_payload}]
+	{ "before": "f7a3133afc170eebcc97349bae547558088a50cb",
+	  "repository": {
+	    "url": "http://github.com/inpsyde/ape", "name": "ape",
+	    "description": "Automatic Push Environment",
+	    "watchers": 5, "forks": 2, "private": 1,
+	    "owner": {
+	      "email": "e.teubert@inpsyde.com",
+	      "name": "eteubert"
+	    }
+	  }, "commits": [
+	    {
+	      "id": "177e12cbcc29c84765f4232c87efb6a6c4cfb194",
+	      "url": "https://github.com/inpsyde/ape/commit/177e\
+					12cbcc29c84765f4232c87efb6a6c4cfb194",
+	      "author": {
+	        "email": "e.teubert@inpsyde.com",
+	        "name": "Eric Teubert"
+	      },
+	      "message": "escape bash dollars",
+	      "timestamp": "2011-12-19T14:57:17-08:00",
+	      "added": ["ftp_tree.rb"]
+	    }
+	  ],
+	  "after": "177e12cbcc29c84765f4232c87efb6a6c4cfb194",
+	  "ref": "refs/heads/dev" }
+	\end{lstlisting}
+	
+	% \caption{Optimaler und tatsächlicher Informationsfluss}
+	% \label{fig:personen_beziehungen}
+\end{figure}
+
 
 % subsubsection interpretation_von_git_commits (end)
 
@@ -423,13 +425,15 @@ Zunächst öffnet \gls{ape} einen SSH Tunnel, um sich in den \gls{reposerver} ei
 
 Nachfolgend kann der \lstinline!live! Branch mit \lstinline!git checkout live! ausgecheckt werden. Schlägt dies fehl, bedeutet das, dass der Branch noch nie ausgecheckt wurde. Um dies nachzuholen, muss der Branch explizit erstellt und mit dem Branch auf \gls{github} verknüpft werden: \lstinline!git checkout -b live origin/live!. Schließlich kann der Branch mit \lstinline!git pull origin live! auf den aktuellen Stand gebracht werden. Eine Zusammenfassung des Vorgangs ist in Listing \ref{lst:git_checkout_live} zu sehen.
 
-\begin{lstlisting}[caption=Wechsel auf den aktualisierten Deployment Branch,label={lst:git_checkout_live}]
-out = ssh.exec_in_path!(path, "git checkout live")
-if out =~ /error: pathspec 'live' did not match/
-  ssh.exec_in_path!(path, "git checkout -b live origin/live")
-end
-ssh.exec_in_path!(path, "git pull origin live")
-\end{lstlisting}
+\begin{figure}
+	\begin{lstlisting}[caption=Wechsel auf den aktualisierten Deployment Branch,label={lst:git_checkout_live}]
+	out = ssh.exec_in_path!(path, "git checkout live")
+	if out =~ /error: pathspec 'live' did not match/
+	  ssh.exec_in_path!(path, "git checkout -b live origin/live")
+	end
+	ssh.exec_in_path!(path, "git pull origin live")
+	\end{lstlisting}
+\end{figure}
 
 Anschließend muss der Featurebranch in \lstinline!live! gemerged werden -- aber nur, wenn das Deployment vom Kunden über \gls{basecamp} ausgelöst wurde. Sollte ein Entwickler direkt einen \gls{pull request} in den \lstinline!live! Branch unternommen haben, ist der Merge bereits geschehen. Treten beim Merge Konflikte auf, müssen zwei Dinge passieren. Zum einen wird der Merge mit \lstinline!git reset --hard live! zurückgenommen und der Deployment-Vorgang abgebrochen. Zum anderen wird ein Entwickler benachrichtigt, dass er selbst mergen und die Konflikte beheben muss.
 
@@ -451,13 +455,18 @@ Ein Zugang über \gls{ssh} setzt voraus, dass ein Schlüsselpaar generiert und e
 
 Es wird davon ausgegangen, dass alle Produkte mit Git verwaltet werden. Daher ist es denkbar, sich auf das Zielsystem per \gls{ssh} einzuloggen und dort im \Gls{deployment}-Pfad mit einem \lstinline!git pull! das Produkt zu aktualisieren. Dies setzt jedoch voraus, dass das Programm git auf allen Zielsystemen installiert ist. Die Konfiguration der einzelnen Server ist aber ungewiss und kann nicht immer beeinflusst werden. Daher wird auf diesen Ansatz verzichtet.
 
-Stattdessen wird das Produkt mit rsync\comment{externe referenz bietet sich an} übertragen. Rsync ist eine Anwendung, um Dateien und Verzeichnisse zwischen Servern zu synchronisieren. Durch die Verwendung von Delta Encoding\comment{externe referenz bietet sich an} ist der Vorgang zudem effizienter als bei einer normalen Dateiübertragung. Ein weiteres für diesen Anwendungsfall nützliches Feature ist die Möglichkeit, einzelne Verzeichnisse von der Übertragung auszuschließen. Auf den Zielsystemen wird nicht entwickelt, daher kann auf das .git Verzeichnis verzichtet werden. Ein Aufruf sieht beispielhaft wie folgt\comment{LaTeX-Referenz draus machen} aus:
-
-> rsync -r --exclude=.git <lokaler-pfad> <user>@<host>:<entfernter-pfad>
+Stattdessen wird das Produkt mit \gls{rsync} übertragen. Rsync ist eine Anwendung, um Dateien und Verzeichnisse zwischen Servern zu synchronisieren. Durch die Verwendung von Delta Encoding\comment{externe referenz bietet sich an} ist der Vorgang zudem effizienter als bei einer normalen Dateiübertragung. Ein weiteres für diesen Anwendungsfall nützliches Feature ist die Möglichkeit, einzelne Verzeichnisse von der Übertragung auszuschließen. Auf den Zielsystemen wird nicht entwickelt, daher kann auf das .git Verzeichnis verzichtet werden. Ein Beispielbefehl ist in Listing \ref{lst:example_rsync} zu sehen.
 
 Der Parameter \lstinline!-r! sorgt für eine rekursive Übertragung aller Verzeichnisse. Die Möglichkeit, über den \lstinline!--exclude! Parameter Verzeichnisse ausschließen zu können ist nicht notwendig, aber vorteilhaft. Das .git Verzeichnis beinhaltet tausende kleiner Dateien, welche den Übertragungsvorgang verlangsamen würden.
 
 Insgesamt ist die Dateiübertragung mit rsync über \gls{ssh} zu bevorzugen. Mit dem einen oben genannten Befehl\comment{LaTeX-Referenz draus machen} werden alle Anforderungen erfüllt.
+
+\begin{figure}
+	\begin{lstlisting}[caption=Beispiel rsync Befehl,label={lst:example_rsync}]
+	> rsync -r --exclude=.git \
+		<lokaler-pfad> <user>@<host>:<entfernter-pfad>
+	\end{lstlisting}
+\end{figure}
 
 % paragraph deployment_mit_ssh (end)
 
@@ -472,44 +481,50 @@ Weiterhin verfügt das Protokoll nur über einen eingeschränkten Sprachschatz. 
 
 Da all das vollautomatisiert ablaufen muss, wurde ein Algorithmus entwickelt, welcher für ein gegebenes Projekt ein \gls{ftp}-Script zur Übertragung generiert. Zunächst wird mit Hilfe von find\comment{externe referenz bietet sich an} eine Liste aller Pfade ermittelt. Ein Beispiel ist in Listing \ref{lst:gen_path_list} zu sehen.
 
-\begin{lstlisting}[caption=Generiere Liste aller Pfade,label={lst:gen_path_list}]
-> find <path> -ls -path '*/.git*' -prune |\
-	awk '{printf $3; for(x=11;x<=20;x++)\
-	{printf " %s", $x} printf "\n" }'
-\end{lstlisting}
+\begin{figure}
+	\begin{lstlisting}[caption=Generiere Liste aller Pfade,label={lst:gen_path_list}]
+	> find <path> -ls -path '*/.git*' -prune |\
+		awk '{printf $3; for(x=11;x<=20;x++)\
+		{printf " %s", $x} printf "\n" }'
+	\end{lstlisting}
+\end{figure}
 
 Der \gls{find}\comment{externe referenz bietet sich an} Befehl schließt mit Hilfe der Parameter \lstinline!-path '*/.git*' -prune! das git Verzeichnis aus der Ergebnisliste aus. Außerdem wird mit \lstinline!-ls! eine detailliertere Ausgabe erzwungen, da die Information benötigt wird, ob ein gefundenes Objekt eine Datei oder ein Verzeichnis ist. Mit Hilfe von \gls{awk}\comment{externe referenz bietet sich an} wird die Ausgabe auf die Dateimodi, sowie den Pfad reduziert. Eine Beispielausgabe ist in Listing \ref{lst:gen_path_list_example} zu sehen.
 
-\begin{lstlisting}[caption=Beispielausgabe für gefundene Pfade,label={lst:gen_path_list_example}]
-	drwxr-xr-x ./bar
-	-rw-r--r-- ./bar/baz.rb
-	-rw-r--r-- ./bar/foo.rb
-	-rw-r--r-- ./impress.md
-	-rw-r--r-- ./index.php
-	-rw-r--r-- ./README
-\end{lstlisting}
+\begin{figure}
+	\begin{lstlisting}[caption=Beispielausgabe für gefundene Pfade,label={lst:gen_path_list_example}]
+		drwxr-xr-x ./bar
+		-rw-r--r-- ./bar/baz.rb
+		-rw-r--r-- ./bar/foo.rb
+		-rw-r--r-- ./impress.md
+		-rw-r--r-- ./index.php
+		-rw-r--r-- ./README
+	\end{lstlisting}
+\end{figure}
      
 Anschließend wird anhand dieser Ausgabe eine Baumdatenstruktur erstellt, welche das Verzeichnis repräsentiert. Nun kann mit Hilfe des Visitor-Patterns\comment{externe referenz bietet sich an} das \gls{ftp}-Script generiert werden. Trifft der Visitor auf eine Datei, wird diese mit \lstinline!put <datei>! übertragen. Der Pseudocode zum Verarbeiten eines Verzeichnisses ist in Listing \ref{lst:process_dir} zu sehen.
 
-\begin{lstlisting}[caption=Verarbeitung eines Verzeichnisses,label={lst:process_dir}]
-	out = Array.new
-	out << "mkdir <verzeichnisname>
-	out << "lcd <verzeichnisname>
-	out << "cd <verzeichnisname>
-	for all children { out << child.receive }
-	out << "lcd .."
-	out << "cd .."
-	return out
-\end{lstlisting}
-
 Nachdem das Verzeichnis auf dem Zielsystem erstellt wurde, wird es sowohl lokal als auch im Ziel betreten. Anschließend werden rekursiv alle Kindknoten — also Dateien und eventuell weitere Verzeichnisse — abgearbeitet. Schließlich wird das Verzeichnis wieder verlassen.
+
+\begin{figure}
+	\begin{lstlisting}[caption=Verarbeitung eines Verzeichnisses,label={lst:process_dir}]
+		out = Array.new
+		out << "mkdir <verzeichnisname>
+		out << "lcd <verzeichnisname>
+		out << "cd <verzeichnisname>
+		for all children { out << child.receive }
+		out << "lcd .."
+		out << "cd .."
+		return out
+	\end{lstlisting}
+\end{figure}
 
 % paragraph deployment_mit_ftp (end)
 
 \paragraph{Vergleich der Deployment Varianten} % (fold)
 \label{ssub:vergleich_der_deployment_varianten}
 
-Während über \gls{ssh} ein einziger rsync-Befehl ausreicht, um alle Andforderungen zu erreichen, muss für \gls{ftp} ein ganz eigener Algorithmus implementiert werden. Die \gls{ssh}-Authentifizierung ist sicher, da sie über ein Schlüsselpaar hergestellt wird. \gls{ftp} hingegen ist auf ein Klartext-Passwort angewiesen. Außerdem ist rsync schneller und damit effizienter als \gls{ftp}\comment{externe referenz bietet sich an}. Wenn die Auswahl besteht, sollte daher immer die \gls{ssh}-Variante vorgezogen werden.
+Während über \gls{ssh} ein einziger rsync-Befehl ausreicht, um alle Anforderungen zu erreichen, muss für \gls{ftp} ein ganz eigener Algorithmus implementiert werden. Die \gls{ssh}-Authentifizierung ist sicher, da sie über ein Schlüsselpaar hergestellt wird. \gls{ftp} hingegen ist auf ein Klartext-Passwort angewiesen. Außerdem ist rsync schneller und damit effizienter als \gls{ftp}\comment{externe referenz bietet sich an}. Wenn die Auswahl besteht, sollte daher immer die \gls{ssh}-Variante vorgezogen werden.
 
 % paragraph vergleich_der_deployment_varianten (end)
 
@@ -521,8 +536,18 @@ Während über \gls{ssh} ein einziger rsync-Befehl ausreicht, um alle Andforderu
 
 \section{Zusammenfassung und Ausblick} % (fold)
 \label{sec:zusammenfassung_und_ausblick}
+
 % - Was kann's? -> Highlights
+\gls{ape} ist eine Bereicherung für die \gls{inps}. Die zahlreichen Automatisierungen sparen allen Beteiligten Zeit und Aufwand. Jede automatisierte Aktion ist frei von Anfälligkeiten menschlicher Fehler. Der definierte Workflow hilft Entwicklern und Projektleitern, beliebig zwischen Projekten zu wechseln, wenn der Bedarf besteht. Kunden können über \gls{basecamp} transparent eingebunden werden.
+
 % - Was wird in naher Zeit umgesetzt?
+Zahlreiche Erweiterungen sind in Planung. Zum Beispiel ist eine Option für Hotfixes geplant, welche es erlaubt, direkt in das \gls{produktivsystem} zu deployen, um noch schneller kritische Fehler beheben zu können. Im Moment existiert eine rudimentäre Weboberfläche für die Konfiguration von \gls{ape}. Dort soll es in Zukunft möglich sein, den Status von Projekten zu überwachen. Die Daten liegen bereits vor, da sie für das Funktionieren des Services benötigt werden. Sie müssen lediglich noch in einer nützlichen Form visualisiert werden.
+
 % - Was sind die Visionen?
+Langfristig sind verschiedene größere Module denkbar. Zum Beispiel wäre ein auf den Workflow angepasstes \gls{cli} auf \gls{git} vorteilhaft. Dies würde die Möglichkeit menschlicher Fehler weiter verringern und gleichzeitig den Entwicklern Tipparbeit sparen.
+
+Im Moment muss eine WordPress-Installation zu Beginn auf dem Server manuell eingerichtet werden und von diesem Zeitpunkt an wird nur noch innerhalb des \lstinline!wp-content! Ordners deployed. Es ist denkbar, dass \gls{ape} auch diese erste Installation mit übernimmt und auch Datenbankzugangsdaten, Domaineinstellungen usw. mit verwaltet.
+
 % - evtl. Diskussion von Alternativen
+Es ist auch denkbar, \gls{ape} als Plugin von \gls{jenkins} zu implementieren. Wenn eine Firma bereits \gls{ci} nutzt, wäre dies ein besserer Ansatz als \gls{ape} als eigenständigen Service laufen zu lassen. Doch bisher ist dies nicht geplant, daher gab es auch keine Veranlassung, dies in der Form umzusetzen.
 % section zusammenfassung_und_ausblick (end)
