@@ -1,61 +1,61 @@
 \section{Einleitung} % (fold)
 \label{sec:einleitung}
 
-Das Projekt entsteht im Auftrag der Agentur \gls{inps}. Diese erhofft sich Kostenersparnis durch Automatisierung, sowie eine solidere rechtliche Basis gegenüber ihren Kunden.
+\gls{ape} wird im Auftrag der Agentur \gls{inps} entwickelt. Diese erhofft sich Kostenersparnis durch Automatisierung, sowie eine solidere rechtliche Basis gegenüber ihren Kunden.
 
-Automatisierung wird an verschiedenen Stellen eingeführt. Da bereits das Versionskontrollsystem git verwendet wird, werden dessen Eigenschaften ausgenutzt. Hält ein Entwickler ein Feature für abgeschlossen, stellt er über den Service GitHub einen so genannten Pull Request. Alle am Projekt beteiligten Entwickler werden benachrichtigt und können Anmerkungen und sogar Änderungen vornehmen, bevor das Feature übernommen wird. Dies geschieht automatisch. Außerdem wird im Projektmanagement-Tool Basecamp eine zum Pull Request passende To-do erstellt. Der Kunde wird darüber sofort per E-Mail benachrichtigt.
+Automatisierung wird an verschiedenen Stellen eingeführt. Hält ein Entwickler ein Feature für abgeschlossen, stellt er über den Service GitHub einen so genannten Pull Request. Alle am Projekt beteiligten Entwickler werden benachrichtigt und können Anmerkungen und sogar Änderungen vornehmen, bevor das Feature übernommen wird. Dies geschieht automatisch. Außerdem wird im Projektmanagement-Tool Basecamp eine zum Pull Request passende Aufgabe erstellt. Der Kunde wird darüber sofort per E-Mail benachrichtigt.
 
-Dieser Part ist insbesondere rechtlich interessant. Der Kunde kann das Feature nun in einer separaten Testumgebung ansehen und eventuell von seiner eigenen \gls{qa}-Abteilung verifizieren lassen. Ist der Kunde zufrieden, hakt er die To-do ab und gibt damit sein Einverständnis. Es kann vertraglich geregelt werden, dass der Kunde sich der Qualität des Features versichert hat und somit die \gls{inps} keinerlei Kosten für eventuell auf diesem Feature basierenden Ausfälle übernimmt.
+Dieser Part ist insbesondere rechtlich interessant. Der Kunde kann das Feature nun in einer separaten Testumgebung ansehen und eventuell von seiner eigenen \gls{qa}-Abteilung verifizieren lassen. Ist der Kunde zufrieden, markiert er die Aufgabe als erledigt und gibt damit sein Einverständnis. Es kann vertraglich geregelt werden, dass der Kunde sich der Qualität des Features versichert hat und somit die \gls{inps} keinerlei Kosten für eventuell auf diesem Feature basierenden Ausfälle übernimmt.
 
-Die Bestätigung des Kunden löst einen weiteren Automatisierungsmechanismus aus. Das Feature wird in den produktiven Versionierungszweig übernommen und auf dem \gls{produktivsystem} aktiviert. Der Entwickler muss nichts weiter unternehmen und der Kunde kann sein akzeptiertes Feature ohne Verzögerung betrachten.
+Die Bestätigung des Kunden löst einen weiteren Automatisierungsmechanismus aus. Das Feature wird in den produktiven Versionierungszweig übernommen und auf dem \gls{produktivsystem} aktiviert. Der er Kunde kann sein akzeptiertes Feature betrachten, ohne dass er auf den Eingriff eines Entwicklers warten muss.
 
-Insgesamt wird ein Service entwickelt, welcher die bereits genutzten Systeme git, GitHub und Basecamp verbindet und einige Automatisierungen einführt. Die Integration ist dabei transparent. Weder Kunde noch Entwickler sieht jemals eine grafische Oberfläche des Services. Beide Parteien profitieren jedoch von den Automatisierungen und Absicherungen, welche der Service bietet.
+Es ein Service entwickelt, welcher die bereits genutzten Systeme git, GitHub und Basecamp verbindet und einige Automatisierungen einführt. Die Integration ist dabei transparent. Weder Kunde noch Entwickler sieht jemals eine grafische Oberfläche des Services. Beide Parteien profitieren jedoch von den Automatisierungen und Absicherungen, welche der Service bietet.
 
 \gls{ape} wird als unabhängiger Web-Service mit Hilfe des Frameworks \gls{ror} in der Programmiersprache \gls{ruby} entwickelt. Die Herausforderungen bei der Planung und Implementierungen sind speziell in den zahlreichen Schnittstellen zu finden. Sechs Architekturkomponenten kommunizieren miteinander über Protokolle wie HTTP, SSH und FTP; mit Datenformaten JSON und XML; und Tools wie git und rsync.
 
+Diese Arbeit zeigt, wie die beschriebenen Ideen als Web-Service implementiert werden können. Kapitel \ref{sec:konzepte_und_werkzeuge} erläutert die theoretischen Konzepte und Ideen hinter dem Service, sowie einige wesentliche Werkzeuge, welche zum Verständnis der Implementierung notwendig sind. Kapitel \ref{sec:architektur_und_umsetzung} präsentiert Details der vorliegenden Architektur und gibt einen Einblick in die Implementierung. Kapitel \ref{sec:zusammenfassung_und_ausblick} schließt die Arbeit mit einer Zusammenfassung ab.
+
 % section einleitung (end)
 
-\section{Konzepte und Werkzeuge} % (fold) 8+ Seiten, Allgemeines Kapitel
+\section{Konzepte und Werkzeuge} % (fold)
 \label{sec:konzepte_und_werkzeuge}
 
-Dieses Kapitel widmet sich den Grundlagen, die zum Verständnis der nachfolgenden Arbeit notwendig sind. Der Leser möge selbst entscheiden, wie vertraut er mit der jeweiligen Thematik bereits ist und bei Bedarf lediglich querlesen oder ganz überspringen.
+Dieses Kapitel widmet sich den Grundlagen, die zum Verständnis der vorliegenden Arbeit notwendig sind.
 
 \subsection{Konzepte} % (fold)
 \label{sub:konzepte}
 
-\gls{ape} ist ein Deployment-System. Dieses Kapitel erklärt, was das ist und welche Teilaufgabe davon \gls{ape} übernimmt.
+\gls{ape} ist ein Deployment-System. Dieses Kapitel erklärt, was im Rahmen dieser Arbeit unter \emph{Deployment} (von englisch \emph{to deploy}: \emph{einsetzen}, \emph{anwenden}) zu verstehen ist.
 
 \subsubsection{Deployment} % (fold)
 \label{ssub:deployment}
 
-\gls{deployment} ist ein englischsprachiger Begriff. \emph{to deploy} kann mit \emph{einsetzen} und \emph{anwenden} übersetzt werden.
-
 Im Bereich der Softwareentwicklung beschreibt es den Vorgang, ein entwickeltes Projekt oder Teilprojekt in einen Zustand zu überführen, so dass es vom Endbenutzer eingesetzt werden kann.
 
-Arbeitet ein Entwickler an einem Projekt, so geschieht dies unter Idealbedingungen. Er hat seine lokalen Werkzeuge zur Verfügung und kann seine Arbeitsumgebung so konfigurieren, dass das Projekt am besten funktioniert. Diese Bedingungen unterscheiden sich jedoch vom \gls{produktivsystem}. Diese Tatsache muss beim Deployment beachtet werden.
+Arbeitet ein Entwickler an einem Projekt, hat er seine lokalen Werkzeuge zur Verfügung und kann seine Arbeitsumgebung so konfigurieren, dass das Projekt am besten funktioniert. Diese Bedingungen unterscheiden sich jedoch vom \gls{produktivsystem}. Diese Tatsache muss beim Deployment beachtet werden.
 
-Wird in Sprachen entwickelt, welche kompiliert werden müssen, entstehen zusätzliche Schwierigkeiten. Der korrekte Compiler muss in der korrekten Version verwendet werden. Während der Entwickler in der Programmierphase den Compile-Button seiner \gls{ide} verwenden kann, steht diese Funktion dem Endbenutzer nicht zur Verfügung. Dieser ist auf eine ausführbare Datei angewiesen.
+Wird in Programmierprachen entwickelt, deren Quellcode kompiliert werden muss, entstehen zusätzliche Schwierigkeiten. Der korrekte Compiler muss in der korrekten Version verwendet werden. Während der Entwickler in der Programmierphase den Compile-Button seiner \gls{ide} verwenden kann, steht diese Funktion dem Endbenutzer nicht zur Verfügung. Dieser ist auf eine ausführbare Datei angewiesen.
 
 Im Rahmen dieser Arbeit werden jedoch ausschließlich Webprojekte besprochen. Diese werden dynamisch interpretiert, nicht compiliert. Damit entfällt die besprochene Hürde.
 
-Webentwicklung erfordert, dass das Projektverzeichnis zum Zielsystem übertragen wird. Dies geschieht entweder manuell oder automatisiert. Letztgenanntes ist erstrebenswert. Der Grund dafür wird unter Anderem in Kapitel \ref{ssub:continuous_deployment} besprochen.
+Webentwicklung erfordert, dass das Projektverzeichnis zum Zielsystem übertragen wird. Dies geschieht entweder manuell oder automatisiert. Letztgenanntes ist erstrebenswert. Der Grund dafür wird unter anderem in Kapitel \ref{ssub:continuous_deployment} besprochen.
 
 % subsubsection deployment (end)
 
 \subsubsection{Continuous Deployment} % (fold)
 \label{ssub:continuous_deployment}
 
-Mit wachsender Projektgröße steigt der Aufwand des Deployments. Außerdem besteht immer die Möglichkeit, dass beim Einspielen einer neuen Version in das \gls{produktivsystem} Fehler entstehen. Je größer die Änderungen, desto höher ist die Wahrscheinlichkeit der Einführung neuer Fehler\comment{externe ref}. Continuous Deployment versucht, diese Probleme zu lösen oder zumindest einzugrenzen.
+Mit wachsender Projektgröße steigt der Aufwand des Deployments. Außerdem besteht immer die Möglichkeit, dass beim Einspielen einer neuen Version in das \gls{produktivsystem} Fehler entstehen. Je größer die Änderungen, desto höher ist die Wahrscheinlichkeit der Einführung neuer Fehler\comment{externe ref}. Continuous Deployment ist ein Ansatz, diese Probleme zu lösen oder zumindest einzugrenzen.
 
-\emph{Continuous}, englisch \emph{kontinuierlich}, \emph{ständig} oder \emph{stetig}, beschreibt einen wesentlichen Aspekt. Es ist in der Software-Entwicklung üblich, in Releases zu denken. Das heißt, es wird für Wochen oder Monate im Voraus geplant, woran gearbeitet wird. Erst, wenn dieser Plan abgearbeitet wurde, werden alle Änderungen zugleich deployed. Dies ist im Bereich des Webs aber weder erforderlich noch wünschenswert.
+\emph{Continuous}, englisch \emph{kontinuierlich}, \emph{ständig} oder \emph{stetig}, beschreibt einen wesentlichen Aspekt. Es ist in der Software-Entwicklung üblich, in Releases zu entwickeln. Das heißt, es wird für Wochen oder Monate im Voraus geplant, woran gearbeitet wird. Erst, wenn dieser Plan abgearbeitet wurde, werden alle Änderungen zugleich deployed. Dies ist im Bereich des Webs aber weder erforderlich noch wünschenswert.
 
-Es gibt mehrere Gründe, diesen Ansatz zu vermeiden. Zum einen steigt, wie bereits erwähnt, mit der Größe der Änderungen auch die Wahrscheinlichkeit eines Fehlers. Zum anderen muss Releasemanagement betrieben werden, um kritische Patches sowohl im \gls{produktivsystem} als auch im gerade entwickelten Release einfließen zu lassen. Weiterhin ist es im Sinne des Endkunden, wenn dieser schneller von neuen Features profitiert. Schließlich ist es um so schwieriger, einen Fehler einer Änderung zuzuordnen, je mehr Änderungen mit einem Mal deployed werden.
+Es gibt mehrere Gründe, diesen Ansatz zu vermeiden. Zum einen steigt, wie bereits erwähnt, mit der Größe der Änderungen auch die Wahrscheinlichkeit eines Fehlers. Zum anderen muss Releasemanagement betrieben werden, um kritische Patches sowohl im \gls{produktivsystem} als auch im gerade entwickelten Release einfließen zu lassen. Weiterhin ist es im Sinne des Endkunden, wenn dieser schneller von neuen Features profitiert, als es mit dem manuellen Freischalten durch einen Entwickler möglich wäre. Schließlich ist es um so schwieriger, einen Fehler einer Änderung zuzuordnen, je mehr Änderungen mit einem Mal deployed werden.
 
-Mit Continuous Deployment ist es möglich, täglich oder sogar mehrmals täglich kleine Änderungen zu veröffentlichen. Kritische Patches können sofort im normalen Entwicklungsprozess behandelt werden. Endbenutzer profitieren sofort von Features. Auftretende Fehler können leichter der soeben eingeführten Änderung zugeordnet werden.
+Mit Continuous Deployment ist es möglich, täglich oder sogar mehrmals täglich kleine Änderungen zu veröffentlichen. Kritische Patches können sofort im normalen Entwicklungsprozess behandelt werden. Endbenutzer profitieren sofort von Features. Auftretende Fehler können leichter als zuvor der soeben eingeführten Änderung zugeordnet werden, da sich die Menge der Quellcodeänderungen je Deploymentvorgang verringert.
 
-Dies ist jedoch nur realisierbar, wenn der Aufwand des Deployments klein ist. Das heißt, es soll so viel wie möglich automatisiert werden. Je weniger der Entwickler eingreifen muss, desto mehr Zeit kann er mit der Entwicklung von Features verbringen. Ist der Aufwand des Deployments zu groß, wird der Entwickler verleitet, mehrere Features zu einem Release zusammenzufassen, was dem Grundgedanken des Continuous Deployments widerspricht. Es handelt sich hierbei um eine psychologische Schranke. Mit anderen Worten, es ist für jeden Entwickler eine andere Interpretation von \emph{zu groß} notwendig. Schließlich kann nur das Ziel verfolgt werden, den Aufwand immer weiter zu verringern.
+Dies ist jedoch nur realisierbar, wenn der Aufwand des Deployments klein ist. Das heißt, es soll so viel wie möglich automatisiert werden. Je weniger der Entwickler eingreifen muss, desto mehr Zeit kann er mit der Entwicklung von Features verbringen. Ist der Aufwand des Deployments zu groß, wird der Entwickler verleitet, mehrere Features zu einem Release zusammenzufassen, was dem Grundgedanken des Continuous Deployments widerspricht. Es handelt sich hierbei um eine psychologische Schranke. Diese Schranke kann sich jedoch von Entwickler zu Entwickler unterscheiden. Schließlich kann nur das Ziel verfolgt werden, den Aufwand immer weiter zu verringern.
 
-Angenommen, es existiert ein Deployment-System mit genügend geringem Aufwand, so dass kein Entwickler dazu tendiert, das System zu umgehen. Dann ist es auch möglich, auf beliebig viele Systeme zu deployen. Das ermöglicht die Existenz eines \glspl{stagingsystem}. Dieses kann identisch zum \gls{produktivsystem} sein -- mit dem einzigen Unterschied, dass es für Endbenutzer nicht erreichbar ist. Dann kann eine Änderung zuerst dorthin deployed und unter realistischen Bedingungen getestet werden. So können Fehler bereits auf diesem System entdeckt und behoben werden, bevor das neue Feature das \gls{produktivsystem} erreicht.
+Angenommen, es existiert ein Deployment-System mit genügend geringem Aufwand, so dass kein Entwickler dazu tendiert, das System zu umgehen. Dann ist es auch möglich, auf beliebig viele Systeme zu deployen. Das ermöglicht die Existenz eines \glspl{stagingsystem}. Dieses kann identisch zum \gls{produktivsystem} sein -- mit dem einzigen Unterschied, dass es für Endbenutzer nicht erreichbar ist. Dann kann eine Änderung zuerst dorthin deployed und unter realistischen Bedingungen überprüft werden. So können Fehler bereits auf diesem System entdeckt und behoben werden, bevor das neue Feature das \gls{produktivsystem} erreicht.
 
 Das wiederum erlaubt eine größere Flexibilität im Arbeitsablauf. Eine \gls{qa} Abteilung kann selbstständig ein Testverfahren entwickeln und dieses jedes Mal durchlaufen, wenn eine neue Änderung das \gls{stagingsystem} erreicht.
 
@@ -68,7 +68,7 @@ Das wiederum erlaubt eine größere Flexibilität im Arbeitsablauf. Eine \gls{qa
 \subsection{Werkzeuge} % (fold)
 \label{sub:werkzeuge}
 
-Nachfolgend werden einige Werkzeuge und Teile derer Funktionen erläutert, die zum Verständnis der Arbeit notwendig sind.
+Nachfolgend werden einige Werkzeuge und Teile der Funktionen erläutert, die zum Verständnis der Arbeit notwendig sind.
 
 \subsubsection{SSH \& Asymmetrische Authentifizierung} % (fold)
 \label{ssub:ssh_&_asymmetrische_authentifizierung}
@@ -82,9 +82,9 @@ An mehreren Stellen wird \gls{ssh} zum Einsatz kommen. Dieses Protokoll erfüllt
 \subsubsection{git} % (fold)
 \label{ssub:git}
 
-Ein zentrales Werkzeug des Workflows ist \gls{git}. Es wird zur dezentralen Versionskontrolle verwendet. Im Zusammenspiel mit \gls{github} bildet es die Basis des Workflows.
+Ein Werkzeug des Deployment-Workflows ist \gls{git}. Es wird zur dezentralen Versionskontrolle verwendet. Im Zusammenspiel mit \gls{github} bildet es die Basis des Workflows.
 
-Zum Verständnis der weiteren Arbeit ist es notwendig, einige grundlegende Kommandozeilenbefehle zu verstehen. Diese werden nun erklärt.
+Zum Verständnis der weiteren Arbeit ist es notwendig, einige grundlegende Kommandozeilenbefehle zu verstehen. Diese werden nun erklärt:
 
 \paragraph{\lstinline!git clone <repository>!} % (fold)
 \label{par:git_clone}
@@ -121,7 +121,7 @@ Zeigt den Status des aktuellen \glspl{working directory}.
 
 Um Daten von einem lokalen zu einem entfernten System zu kopieren, kann rsync verwendet werden. Es unterstützt rekursive Datentransfers, sowie Authentifizierung über \gls{ssh}.
 
-Rsync wird zum Einsatz kommen, um Projektverzeichnisse auf Zielsysteme zu kopieren. Dies ist jedoch nur möglich, wenn diese \gls{ssh}-Authentifizierung unterstützen. Als Alternative kommt das \gls{ftp} (Kapitel \ref{ssub:ftp}) zum Einsatz.
+Rsync kommt zum Einsatz, um Projektverzeichnisse auf Zielsysteme zu kopieren. Dies ist jedoch nur möglich, wenn diese \gls{ssh}-Authentifizierung unterstützen. Als Alternative kommt das \gls{ftp} (Kapitel \ref{ssub:ftp}) zum Einsatz.
 
 % subsubsection rsync (end)
 
@@ -138,8 +138,6 @@ Rsync wird zum Einsatz kommen, um Projektverzeichnisse auf Zielsysteme zu kopier
 \gls{ape} wird mit \gls{ror} entwickelt.
 
 \gls{ror} ist ein Open Source Full-Stack Web Application Framework für die Programmiersprache Ruby. Full-Stack bedeutet, dass das Framework -- und damit der Programmierer -- Zugriff auf Informationen des Webservers hat, Datenbankabfragen senden kann und ein Templatingsystem zur Verfügung stellt.
-
-Das Framework wurde ursprünglich aus dem Projekt \gls{basecamp} extrahiert, welches in dieser Arbeit auch besprochen wird. Das ist jedoch ein zufälliges Zusammentreffen. \gls{ape} hätte auch in einem anderen Framework implementiert werden können. \gls{ror} wurde insbesondere auf Basis der vorhandenen Kenntnisse des Entwicklers ausgewählt.
 
 % subsubsection ruby_ruby_on_rails (end)
 
@@ -176,13 +174,13 @@ Das Framework wurde ursprünglich aus dem Projekt \gls{basecamp} extrahiert, wel
 
 \gls{ape} wird darauf ausgelegt, \gls{wordpress}-Systeme zu deployen. Das heißt nicht, dass keine anderen Systeme damit verwaltet werden können. Da vorerst jedoch ausschließlich auf \gls{wordpress} basierende Projekte zum Einsatz kommen sollen, wird auch im Rahmen dieser Arbeit nichts anderes betrachtet.
 
-\gls{wordpress} ist eine freie Open Source Blogging Plattform und \gls{cms} auf Basis von \gls{php} und \gls{mysql}. Unter anderem wegen seiner Plugin-Architektur und seinem Template-System eignet es sich, um verschiedenste Ansprüche erfüllen zu können.
+\gls{wordpress} ist eine freie Open Source Blogging Plattform und kann auch als \gls{cms} verwendet werden. Es basiert auf \gls{php} und \gls{mysql}. Unter anderem wegen seiner Plugin-Architektur und seinem Template-System eignet es sich, um verschiedenste Ansprüche erfüllen zu können.
 
-Für das \gls{deployment} ist lediglich der Ordner \lstinline!wp-content! von Bedeutung. Alle außerhalb dieses Ordners liegenden Dateien gehören zu \gls{wordpress} selbst und sollten nie verändert werden, da sie nach einen \gls{wordpress} Update ohnehin wieder zurückgesetzt werden würden. Die einzige Ausnahme ist die Datei \lstinline!wp-config.php!, welche systembezogene Konfigurationen, wie Datenbank-Zugangsdaten, enthält.
+Für das \gls{deployment} ist lediglich der in Abbildung \ref{fig:example_wp_content_dir} skizzierte Ordner \lstinline!wp-content/! von Bedeutung. Alle außerhalb dieses Ordners liegenden Dateien gehören zu \gls{wordpress} selbst und dürfen nicht verändert werden, da sie nach einem \gls{wordpress} Update ohnehin wieder zurückgesetzt werden. Die einzige Ausnahme ist die Datei \lstinline!wp-config.php!, welche systembezogene Konfigurationen, wie Datenbank-Zugangsdaten, enthält. Es wird ausschließlich in den Ordnern \lstinline!plugins/! und \lstinline!themes/! entwickelt. Jedes Plugin bzw. jedes Theme befindet sich in einem eigenen Unterordner. \lstinline!upgrade/! wird von WordPress bei Updates als temporäres Verzeichnis benutzt und \lstinline!uploads/! beinhaltet von Endnutzern hochgeladenen Dateien.
 
 Themes sind Dateien, welche Design und Funktionalität einer \gls{wordpress} Seite definieren. Plugins können unabhängig vom Theme eine Seite um Funktionalität erweitern oder bestehende Features verändern.
 
-Veränderungen an der Datenbank werden von den Plugins und Themes selbst administriert. Das ist vorteilhaft, da das \gls{deployment} sich dann nicht darum kümmern muss. Es ist ausreichend, das \lstinline!wp-content! Verzeichnis zu aktualisieren.
+Veränderungen an der Datenbank werden von den Plugins und Themes selbst administriert. Das ist vorteilhaft, da das \gls{deployment} sich dann nicht darum kümmern muss. Es ist ausreichend, das \lstinline!wp-content/! Verzeichnis zu aktualisieren.
 
 % subsubsection wordpress (end)
 
@@ -190,10 +188,10 @@ Veränderungen an der Datenbank werden von den Plugins und Themes selbst adminis
 
 % section konzepte_und_werkzeuge (end)
 
-\section{Architektur und Umsetzung} % (fold) 10+ Seiten
+\section{Architektur und Umsetzung} % (fold)
 \label{sec:architektur_und_umsetzung}
 
-Das folgende Kapitel behandelt die Details des entstandenen Services. Zunächst wird erläutert, welches Problem \gls{ape} löst und weshalb genau dieser und kein anderer Ansatz gewählt wird. Anschließend werden Konzept und Architektur des Services analysiert, sowie einzelne Kernelemente der Software im Detail besprochen.
+Dieses Kapitel behandelt die Details des entstandenen Services. Zunächst wird erläutert, welches Problem \gls{ape} löst und weshalb genau dieser und kein anderer Ansatz gewählt wird. Anschließend werden Konzept und Architektur des Services analysiert, sowie einzelne Kernelemente der Software im Detail besprochen.
 
 \subsection{Ziel des Services} % (fold)
 \label{sub:ziel_des_services}
@@ -210,7 +208,7 @@ Ihre Mitarbeiter befinden sich verteilt in Mitteleuropa und arbeiten vorwiegend 
 
 An den kleinsten Projekten arbeiten einzelne Mitarbeiter, aber an der Mehrheit der Projekte arbeiten zwei oder mehr. Es gibt Projektleiter, welche Arbeit an die Entwickler verteilen und den größtmöglichen Teil der Kommunikation mit den Kunden übernehmen, damit die Entwickler ungestört arbeiten können. Dies sind die wesentlichen Rollen im Arbeitsfluss: Projektleiter, Entwickler und Kunde.
 
-Der optimale Informationsfluss (Abbildung~\ref{fig:ideale-beziehung}) ist jedoch unrealistisch. Spätestens wenn das Projekt in Betrieb ist und Fehler berichtet werden, ist die Projektleiter-Schicht zum Teil eine unnötige Barriere. Um dennoch zu gewährleisten, dass der Kunde den Entwickler nicht direkt mit E-Mails oder Anrufen stört, wird das Projekt-Management Tool \Gls{basecamp} benutzt. Dort werden Fehlerberichte, sowie Featureanfragen in To-do-Listen verwaltet (Abbildung~\ref{fig:tatsaechliche-beziehung}).
+Der optimale Informationsfluss (Abbildung~\ref{fig:ideale-beziehung}) ist jedoch unrealistisch. Spätestens wenn das Projekt in Betrieb ist und Fehler berichtet werden, ist die Projektleiter-Schicht zum Teil eine unnötige Barriere. Um dennoch zu gewährleisten, dass der Kunde den Entwickler nicht direkt mit E-Mails oder Anrufen stört, wird das Projekt-Management Tool \Gls{basecamp} benutzt. Dort werden Fehlerberichte, sowie Featureanfragen in Aufgaben-Listen verwaltet (Abbildung~\ref{fig:tatsaechliche-beziehung}).
 
 Im Folgenden wird nicht mehr zwischen Fehlerbericht und Featureanfrage unterschieden werden. Aus Sicht des Arbeitsablaufs gibt es keinen Unterschied, daher ist es unnötig, beide Fälle zu betrachten. Es wird nur noch von Features die Rede sein.
 
@@ -245,43 +243,9 @@ Im Folgenden wird nicht mehr zwischen Fehlerbericht und Featureanfrage unterschi
 		\end{tikzpicture}
 	}
 	
-	\caption{Optimaler und tatsächlicher Informationsfluss}
+	\caption{\subref{fig:ideale-beziehung} Optimaler und \subref{fig:tatsaechliche-beziehung} tatsächlicher Informationsfluss}
 	\label{fig:personen_beziehungen}
 \end{figure}
-
-% \begin{figure}
-% 	\centering
-% 	\begin{tikzpicture}[auto]
-% 		\node (pm) {Projektleiter};
-% 		\node (customer) [left=of pm] {Kunde}
-% 			edge [<->] (pm)
-% 		;
-% 		\node (dev) [right=of pm] {Entwickler}
-% 			edge [<->] (pm)
-% 		;
-% 	\end{tikzpicture}
-% 	\caption{Optimaler Informationsfluss}
-% 	\label{fig:ideale-beziehung}
-% \end{figure}
-% 
-% \begin{figure}
-% 	\centering
-% 	\begin{tikzpicture}[auto]
-% 		\node (center) {};
-% 		\node (customer)	[left=of center]	{Kunde};
-% 		\node (dev) 		[right=of center]	{Entwickler};
-% 		\node (bc)			[above=of center]	{Basecamp}
-% 			edge [<->,bend right] (customer)
-% 			edge [<->,bend left] (dev)
-% 		;
-% 		\node (pm)			[below=of center]	{Projektleiter}
-% 			edge [<->,bend left] (customer)
-% 			edge [<->,bend right] (dev)
-% 		;
-% 	\end{tikzpicture}
-% 	\caption{Tatsächlicher Informationsfluss}
-% 	\label{fig:tatsaechliche-beziehung}
-% \end{figure}
 
 % subsubsection inps (end)
 
@@ -317,9 +281,9 @@ Es gibt zwei persistente \gls{git} Branches. \emph{dev} und \emph{live}. Letztge
 
 Ein \gls{pull request} wird vom Entwickler genau dann erstellt, wenn er mit der Entwicklung eines Features fertig ist und dieses bereit für das \gls{stagingsystem} ist. Wird dieser akzeptiert, sollen automatisch zwei Aktionen geschehen. Zum einen muss das Feature auf dem \gls{stagingsystem} verfügbar werden. Zum anderen soll der Kunde benachrichtigt werden, dass dieses Feature nun bereit zum testen ist. Beide Aufgaben werden vom \gls{ape} übernommen.
 
-Der \gls{ape}-Service wird von GitHub per \Gls{webhook} informiert, dass ein Pull Request akzeptiert wurde. Zuerst wird das \gls{stagingsystem} aktualisiert. Dazu müssen lediglich die Dateien aus dem Staging-Branch übertragen werden, da \gls{github} bereits das Mergen der Branches übernommen hat. Anschließend wird über eine API in \gls{basecamp} eine To-do angelegt, welche den Kunden über das Feature im Testsystem informiert und ihn um Feedback bittet. Basecamp verschickt automatisch eine E-Mail an den Kunden, so dass zwischen Akzeptanz des \glspl{pull request} und der automatischen Benachrichtigung des Kunden lediglich Sekunden oder Minuten liegen.
+Der \gls{ape}-Service wird von GitHub per \Gls{webhook} informiert, dass ein Pull Request akzeptiert wurde. Zuerst wird das \gls{stagingsystem} aktualisiert. Dazu müssen lediglich die Dateien aus dem Staging-Branch übertragen werden, da \gls{github} bereits das Mergen der Branches übernommen hat. Anschließend wird über eine API in \gls{basecamp} eine Aufgabe angelegt, welche den Kunden über das Feature im Testsystem informiert und ihn um Feedback bittet. Basecamp verschickt automatisch eine E-Mail an den Kunden, so dass zwischen Akzeptanz des \glspl{pull request} und der automatischen Benachrichtigung des Kunden lediglich Sekunden oder Minuten liegen.
 
-Gibt es Probleme, kann der Kunde diese über das Kommentarsystem in \gls{basecamp} äußern und der Entwickler kann diese bearbeiten. Ist der Kunde sofort oder nach Behebung aller Probleme zufrieden, kennzeichnet er dies durch das Abhaken der To-do. \gls{ape} registriert die Veränderung des Status der To-do automatisch und beginnt, das Feature auf das \gls{produktivsystem} zu übertragen. Dazu merged er selbstständig den Featurebranch in den Produktivbranch und überträgt das Ergebnis auf das \gls{produktivsystem}.
+Gibt es Probleme, kann der Kunde diese über das Kommentarsystem in \gls{basecamp} äußern und der Entwickler kann diese bearbeiten. Ist der Kunde sofort oder nach Behebung aller Probleme zufrieden, markiert er die Aufgabe als erledigt. \gls{ape} registriert die Veränderung des Status der Aufgabe automatisch und beginnt, das Feature auf das \gls{produktivsystem} zu übertragen. Dazu merged er selbstständig den Featurebranch in den Produktivbranch und überträgt das Ergebnis auf das \gls{produktivsystem}.
 
 Damit ist ein Featurezyklus abgeschlossen. Ist das Feature klein (z.B. nur eine Codezeile muss angepasst werden) und reagieren alle Parteien schnell, kann der gesamte Zyklus einschließlich Programmierung in weniger als 15 Minuten abgearbeitet werden. Damit können selbst kritische Änderungen schnell vorgenommen werden. Es können beliebig viele dieser Zyklen parallel aktiv sein und ein Entwickler kann an verschiedenen Features gleichzeitig arbeiten, ohne dass sich deren Entwicklungszweige behindern.
 
@@ -340,7 +304,7 @@ Zwischen den Entwicklern und \gls{github} gibt es zwei Schnittstellen. \gls{git}
 
 \gls{github} sendet über eine Web-API automatisiert Informationen an \gls{ape}. Diese Schnittstelle kann über die \gls{github} Webseite konfiguriert werden.
 
-\gls{basecamp} To-dos werden vom \gls{ape} erstellt. Dies geschieht über eine XML-basierte \gls{rest} API, welche von \gls{basecamp} bereitgestellt wird. Die Authentifizierung funktioniert über ein von \gls{basecamp} generiertes API Token.
+\gls{basecamp} Aufgaben werden vom \gls{ape} erstellt. Dies geschieht über eine XML-basierte \gls{rest} API, welche von \gls{basecamp} bereitgestellt wird. Die Authentifizierung funktioniert über ein von \gls{basecamp} generiertes API Token.
 
 Ein Server mit den \gls{ape} Repositories enthält die geklonten \lstinline!git! Repositories. Der Klonvorgang geschieht per direktem Zugriff auf \gls{github} über ein asymmetrisches Authentifizierungsverfahren. Dazu muss im jeweiligen \gls{github} Projekt der Public Key hinterlegt werden. Im Deployment-Vorgang loggt sich der \gls{ape} Service über SSH in die \gls{ape} Repositories ein. Auch dazu wird ein asymmetrisches Authentifizierungsverfahren verwendet.
 
