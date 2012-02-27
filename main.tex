@@ -196,21 +196,11 @@ Dieses Kapitel behandelt die Details des entstandenen Services. Zunächst wird e
 \subsection{Ziel des Services} % (fold)
 \label{sub:ziel_des_services}
 
-%% Welches Problem wird gelöst
-\gls{ape} wird speziell für die Firma \gls{inps} entwickelt. Daher ist es zum Verständnis des Problems notwendig, eine Vorstellung von deren Dienstleistungen und Arbeitsabläufen zu haben.
-
-\subsubsection{\gls{inps}} % (fold)
-\label{ssub:inps}
-
-Die \gls{inps} ist eine deutsche \gls{wordpress}-Agentur. Sie nimmt Aufträge von Kunden aller Größe an, um ihre Webseitenwünsche im \gls{cms} \gls{wordpress} umzusetzen. Die Auftragsbreite reicht von kleinen Pluginentwicklungen bis hin zur Konzeption und Umsetzung ganzer Blognetzwerke und Shopsysteme.
-
-Ihre Mitarbeiter befinden sich verteilt in Mitteleuropa und arbeiten vorwiegend von zuhause. Damit arbeitet die \gls{inps} dezentral. Um je nach Auftragslage flexibel handeln zu können, werden mehr freie als fest angestellte Mitarbeiter beschäftigt.
-
-An den kleinsten Projekten arbeiten einzelne Mitarbeiter, aber an der Mehrheit der Projekte arbeiten zwei oder mehr. Es gibt Projektleiter, welche Arbeit an die Entwickler verteilen und den größtmöglichen Teil der Kommunikation mit den Kunden übernehmen, damit die Entwickler ungestört arbeiten können. Dies sind die wesentlichen Rollen im Arbeitsfluss: Projektleiter, Entwickler und Kunde.
+Software-Projekte haben unterschiedlichen Umfang. An den kleinsten Projekten arbeiten einzelne Mitarbeiter, an anderen Projekten arbeiten zwei oder mehr. Es gibt Projektleiter, welche Arbeit an die Entwickler verteilen und den größtmöglichen Teil der Kommunikation mit den Kunden übernehmen, damit die Entwickler ungestört arbeiten können. Dies sind die wesentlichen Rollen im Arbeitsfluss: Projektleiter, Entwickler und Kunde.
 
 Der optimale Informationsfluss (Abbildung~\ref{fig:ideale-beziehung}) ist jedoch unrealistisch. Spätestens wenn das Projekt in Betrieb ist und Fehler berichtet werden, ist die Projektleiter-Schicht zum Teil eine unnötige Barriere. Um dennoch zu gewährleisten, dass der Kunde den Entwickler nicht direkt mit E-Mails oder Anrufen stört, wird das Projekt-Management Tool \Gls{basecamp} benutzt. Dort werden Fehlerberichte, sowie Featureanfragen in Aufgaben-Listen verwaltet (Abbildung~\ref{fig:tatsaechliche-beziehung}).
 
-Im Folgenden wird nicht mehr zwischen Fehlerbericht und Featureanfrage unterschieden werden. Aus Sicht des Arbeitsablaufs gibt es keinen Unterschied, daher ist es unnötig, beide Fälle zu betrachten. Es wird nur noch von Features die Rede sein.
+Im Rest dieser Arbeit wird nicht mehr zwischen Fehlerbericht und Featureanfrage unterschieden werden. Aus Sicht des Arbeitsablaufs gibt es keinen Unterschied, daher ist es unnötig, beide Fälle zu betrachten. Es wird nur noch von Features die Rede sein.
 
 \begin{figure}
 	\centering
@@ -264,7 +254,7 @@ Da der Vorgang insgesamt sehr aufwändig ist, wird vorwiegend in Releases gearbe
 
 Diese Vorgehensweise funktioniert, ist jedoch umständlicher als sie sein müsste. Die Webplattform ist prädestiniert für tägliche oder mehrmals tägliche Releases. Es muss lediglich ein passender Workflow gefunden werden.
 
-Weiterhin besteht im Moment das Problem, dass zwischen Projekten Unterschiede herrschen, die zwar klein aber doch vorhanden sind. Das sorgt dafür, dass Entwickler nicht konfliktfrei zwischen Projekten wechseln können. Es ist immer mit Verwirrung und Absprachen verbunden, die bei geeigneten Konventionen nicht nötig wären.
+Weiterhin besteht im Moment das Problem, dass zwischen Projekten Unterschiede herrschen, die zwar klein aber doch vorhanden sind. Das sorgt dafür, dass Entwickler nicht konfliktfrei zwischen Projekten wechseln können. Der Vorgang ist immer mit Verwirrung und Absprachen verbunden, die bei Vorhandensein und Einhaltung von Konventionen nicht nötig sind.
 
 Dieses Problem soll \gls{ape} lösen. Es ist ein Workflow zu entwerfen, welcher Konventionen einführt, der die oben genannten Abläufe vereinheitlicht. Automatisierungen sind, wo möglich, mit Hilfe der Software umzusetzen.
 
@@ -275,13 +265,13 @@ Dieses Problem soll \gls{ape} lösen. Es ist ein Workflow zu entwerfen, welcher 
 
 Zunächst wird festgelegt, dass jedes Feature in seinem eigenen \gls{git}-Branch entwickelt wird. Das hat mehrere Vorteile. Entwickler in einem Projekt müssen sich weniger absprechen, da jeder in seinem eigenen Branch arbeitet. Ein Entwickler kann bei Prioritätenverschiebung zudem sofort die Arbeit an einem Feature anhalten und in einem parallelen Branch das wichtigere Feature bearbeiten. Auf Codeebene lässt sich mit einem einzigen \gls{git}-Befehl ermitteln, welche Zeilen das Feature verändert.
 
-Weiterhin werden \gls{github} \glspl{pull request} ein fester Bestandteil des Workflows. Dies sind automatisierte Anträge, einen Branch in einen anderen zu mergen. Ein \gls{pull request} zeigt die Versionshistorie des Features und die Summe aller Änderungen. Andere Entwickler können das Feature reviewen, Anmerkungen hinterlassen und selbst Änderungen am Feature vornehmen. Sind alle Entwickler mit der Codequalität zufrieden, wird der \gls{pull request} akzeptiert und \gls{github} merged die Branches automatisch.
+Weiterhin werden \gls{github} \glspl{pull request} ein fester Bestandteil des Workflows. Dies sind automatisierte Anträge, einen Branch in einen anderen zu mergen. Ein \gls{pull request} zeigt die Versionshistorie des Features und die Summe aller Änderungen. Andere Entwickler können das Feature überprüfen, Anmerkungen hinterlassen und selbst Änderungen am Feature vornehmen. Sind alle Entwickler mit der Codequalität zufrieden, wird der \gls{pull request} akzeptiert und \gls{github} merged die Branches automatisch.
 
 Es gibt zwei persistente \gls{git} Branches. \emph{dev} und \emph{live}. Letztgenannter ist unter allen Umständen stabil zu halten und wird darum nur in Ausnahmefällen manuell beeinflusst. Er ist ein Abbild des \gls{produktivsystem}s. Fertig entwickelte und vom Kunden bestätigte Features werden vom \gls{ape} in ihn gemerged. Analog dazu repräsentiert der \emph{dev} Branch das \gls{stagingsystem}. \gls{ape} merged Branches in \emph{dev}, wenn auf \gls{github} ein Pull Request akzeptiert wurde.
 
-Ein \gls{pull request} wird vom Entwickler genau dann erstellt, wenn er mit der Entwicklung eines Features fertig ist und dieses bereit für das \gls{stagingsystem} ist. Wird dieser akzeptiert, sollen automatisch zwei Aktionen geschehen. Zum einen muss das Feature auf dem \gls{stagingsystem} verfügbar werden. Zum anderen soll der Kunde benachrichtigt werden, dass dieses Feature nun bereit zum testen ist. Beide Aufgaben werden vom \gls{ape} übernommen.
+Ein \gls{pull request} wird vom Entwickler genau dann erstellt, wenn er mit der Entwicklung eines Features fertig ist und dieses bereit für das \gls{stagingsystem} ist. Wird dieser akzeptiert, sollen automatisch zwei Aktionen geschehen. Zum einen muss das Feature auf dem \gls{stagingsystem} verfügbar werden. Zum anderen soll der Kunde benachrichtigt werden, dass dieses Feature nun bereit zur Übergabe an die \gls{qa} ist. Beide Aufgaben werden vom \gls{ape} übernommen.
 
-Der \gls{ape}-Service wird von GitHub per \Gls{webhook} informiert, dass ein Pull Request akzeptiert wurde. Zuerst wird das \gls{stagingsystem} aktualisiert. Dazu müssen lediglich die Dateien aus dem Staging-Branch übertragen werden, da \gls{github} bereits das Mergen der Branches übernommen hat. Anschließend wird über eine API in \gls{basecamp} eine Aufgabe angelegt, welche den Kunden über das Feature im Testsystem informiert und ihn um Feedback bittet. Basecamp verschickt automatisch eine E-Mail an den Kunden, so dass zwischen Akzeptanz des \glspl{pull request} und der automatischen Benachrichtigung des Kunden lediglich Sekunden oder Minuten liegen.
+Der \gls{ape}-Service wird von GitHub per \Gls{webhook} informiert, dass ein Pull Request akzeptiert wurde. Zuerst wird das \gls{stagingsystem} aktualisiert. Dazu müssen lediglich die Dateien aus dem Staging-Branch übertragen werden, da \gls{github} bereits das Mergen der Branches übernommen hat. Anschließend wird über eine API in \gls{basecamp} eine Aufgabe angelegt, welche den Kunden über das Feature im Testsystem informiert und ihn um Rückmeldung bittet. Basecamp verschickt automatisch eine E-Mail an den Kunden, so dass zwischen Akzeptanz des \glspl{pull request} und der automatischen Benachrichtigung des Kunden lediglich Sekunden oder Minuten liegen.
 
 Gibt es Probleme, kann der Kunde diese über das Kommentarsystem in \gls{basecamp} äußern und der Entwickler kann diese bearbeiten. Ist der Kunde sofort oder nach Behebung aller Probleme zufrieden, markiert er die Aufgabe als erledigt. \gls{ape} registriert die Veränderung des Status der Aufgabe automatisch und beginnt, das Feature auf das \gls{produktivsystem} zu übertragen. Dazu merged er selbstständig den Featurebranch in den Produktivbranch und überträgt das Ergebnis auf das \gls{produktivsystem}.
 
@@ -314,22 +304,12 @@ Damit sind alle Komponenten betrachtet. Je nach Kunde kann es Abweichungen geben
 
 % subsection architektur (end)
 
-\subsection{Alternativen} % (fold)
-\label{sub:alternativen}
-
-Es gibt beliebig viele Ansätze, die zu Anfang genannten Probleme zu lösen. Der soeben beschriebene Workflow ist einer davon. Weitere Herangehensweisen lassen sich unter anderem nach den Kriterien bewerten, wie viel Freiraum dem Entwickler gelassen wird, wie groß der Anteil der Automatisierung ist und wie viel manuell kommuniziert werden muss.
-
-Die Wahl der Werkzeuge ist ausschließlich darin begründet, dass die \gls{inps} diese bereits erfolgreich im Einsatz hat und keinen Grund sieht, diese gegen neue einzutauschen. Es ist denkbar, ein einziges System zu entwickeln, welches die Features aller benötigten Services vereint. Doch der entstandene Mehrnutzen würde den ungleichmäßig höheren Aufwand nicht rechtfertigen.
-
-Interessant wird die Idee des \gls{ape} insbesondere in Beziehung mit \gls{ci} Systemen. Eine häufig verwendete Open Source Anwendung ist \gls{jenkins}. Ist ein solcher Service bereits im Einsatz, bietet sich dieser als Plattform an, um die Konzepte hinter \gls{ape} umzusetzen, zum Beispiel über ein Plugin. Das erspart die Erstellung und Verwaltung einer vollständig neuen Plattform.
-% subsection alternativen (end)
-
 % subsection ziel_des_services (end)
 
 \subsection{Implementierungsdetails} % (fold)
 \label{sub:implementierungsdetails}
 
-Für die Entwicklung des \gls{ape}-Services sind keine komplizierten Algorithmen notwendig. Die Schwierigkeit liegt im reibungslosen Verknüpfen der verschiedenen Services. Ein Schema der existierenden Schnittstellen ist in Abbildung\comment{fehlt} zu sehen. Im Folgenden werden einige ausgewählte nichttriviale Aspekte der Schnittstellenimplementierung besprochen.
+Die Schwierigkeit bei der Entwicklung des \gls{ape}-Services liegt im reibungslosen Verknüpfen der verschiedenen Services. Ein Schema der existierenden Schnittstellen ist in Abbildung\comment{fehlt} zu sehen. In den Kapiteln \ref{ssub:interpretation_von_git_commits} bis \ref{ssub:uebertragung_der_dateien} werden einige ausgewählte nichttriviale Aspekte der Schnittstellenimplementierung besprochen.
 
 \subsubsection{Interpretation von Git-Commits} % (fold)
 \label{ssub:interpretation_von_git_commits}
@@ -385,7 +365,7 @@ Ist \lstinline!dev! der abgeleitete Branch Name, wurde ein Feature in diesen Bra
 
 Die Vorgänge beim Deployment unterscheiden sich kaum. Der Vorgang des Produktiv-Deployment, also das Deployen des \lstinline!live! Branches in das \gls{produktivsystem}, enthält einen zusätzlichen Schritt, daher wird dies als Beispiel herangezogen.
 
-Zunächst öffnet \gls{ape} einen SSH Tunnel, um sich in den \gls{reposerver} einzuloggen. Dort wird, falls er noch nicht existiert, ein Ordner für das Projekt angelegt. Mit \lstinline!git status! wird anschließend überprüft, ob das Projekt bereits aus \gls{github} geklont wurde. Falls nicht, wird dies nun nachgeholt. Sollte dies fehlschlagen, gibt es ein Authentifizierungsproblem zwischen \gls{ape} und \gls{github}, welches behoben werden muss. Erst dann kann der Vorgang fortgesetzt werden.
+Zunächst öffnet \gls{ape} einen SSH Tunnel, um sich in den \gls{reposerver} einzuloggen. Dort wird, falls er noch nicht existiert, ein Ordner für das Projekt angelegt. Mit \lstinline!git status! wird anschließend überprüft, ob das Projekt bereits aus \gls{github} geklont wurde. Falls nicht, wird dies nun nachgeholt. Schlägt der Klonvorgang fehl, gibt es ein Authentifizierungsproblem zwischen \gls{ape} und \gls{github}, welches behoben werden muss. Erst dann kann der Vorgang fortgesetzt werden.
 
 Nachfolgend kann der \lstinline!live! Branch mit \lstinline!git checkout live! ausgecheckt werden. Schlägt dies fehl, bedeutet das, dass der Branch noch nie ausgecheckt wurde. Um dies nachzuholen, muss der Branch explizit erstellt und mit dem Branch auf \gls{github} verknüpft werden: \lstinline!git checkout -b live origin/live!. Schließlich kann der Branch mit \lstinline!git pull origin live! auf den aktuellen Stand gebracht werden. Eine Zusammenfassung des Vorgangs ist in Listing \ref{lst:git_checkout_live} zu sehen.
 
@@ -399,7 +379,7 @@ Nachfolgend kann der \lstinline!live! Branch mit \lstinline!git checkout live! a
 	\end{lstlisting}
 \end{figure}
 
-Anschließend muss der Featurebranch in \lstinline!live! gemerged werden -- aber nur, wenn das Deployment vom Kunden über \gls{basecamp} ausgelöst wurde. Sollte ein Entwickler direkt einen \gls{pull request} in den \lstinline!live! Branch unternommen haben, ist der Merge bereits geschehen. Treten beim Merge Konflikte auf, müssen zwei Dinge passieren. Zum einen wird der Merge mit \lstinline!git reset --hard live! zurückgenommen und der Deployment-Vorgang abgebrochen. Zum anderen wird ein Entwickler benachrichtigt, dass er selbst mergen und die Konflikte beheben muss.
+Anschließend muss der Featurebranch in \lstinline!live! gemerged werden -- aber nur, wenn das Deployment vom Kunden über \gls{basecamp} ausgelöst wurde. Unternimmt ein Entwickler direkt einen \gls{pull request} in den \lstinline!live! Branch, ist der Merge bereits geschehen. Treten beim Merge Konflikte auf, müssen zwei Dinge passieren. Zum einen wird der Merge mit \lstinline!git reset --hard live! zurückgenommen und der Deployment-Vorgang abgebrochen. Zum anderen wird ein Entwickler benachrichtigt, dass er selbst mergen und die Konflikte beheben muss.
 
 An diesem Punkt angekommen, befindet sich auf dem \gls{reposerver} exakt der Projektstand, der deployed werden soll. Nun müssen diese Daten lediglich übertragen werden, um den Vorgang abzuschließen. Dieses komplexe Thema wird separat in Kapitel \ref{ssub:uebertragung_der_dateien} besprochen.
 
@@ -408,7 +388,7 @@ An diesem Punkt angekommen, befindet sich auf dem \gls{reposerver} exakt der Pro
 \subsubsection{Übertragung der Dateien} % (fold)
 \label{ssub:uebertragung_der_dateien}
 
-Im Folgenden wird das Übertragen der Dateien vom Git-Repository zum Zielsystem beschrieben. Je nach Serversetup sind verschiedene Übertragungsmechanismen notwendig. Im Moment kann ein Produkt über \gls{ftp}, sowie \gls{ssh} deployed werden.
+In diesem Kapitel wird das Übertragen der Dateien vom Git-Repository zum Zielsystem beschrieben. Je nach Serversetup sind verschiedene Übertragungsmechanismen notwendig. Im Moment kann ein Produkt über \gls{ftp}, sowie \gls{ssh} deployed werden.
 
 Die Anforderung besteht darin, Dateien zu übertragen. Dabei bestimmen verschiedene Faktoren über die Güte des verwendeten Verfahrens. Es wird vorausgesetzt, dass alle Dateien fehlerfrei übertragen werden. Ein Verfahren gilt als besser, wenn es dieses Ziel in kürzerer Zeit erreichen kann. Weiterhin sind Systeme vorzuziehen, welche den Ausschluss einzelner Verzeichnisse aus der Übertragung zulassen. Diejenigen, welche nur zur Entwicklung benötigt werden, müssen nicht auf Zielsysteme übertragen werden.
 
