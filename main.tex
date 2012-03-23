@@ -7,9 +7,9 @@ Automatisierung wird an verschiedenen Stellen eingeführt. Hält ein Entwickler 
 
 Dieser Part ist insbesondere rechtlich interessant. Der Kunde kann das Feature nun in einer separaten Stagingumgebung ansehen und eventuell von seiner eigenen \gls{qa}-Abteilung verifizieren lassen. Ist der Kunde zufrieden, markiert er die Aufgabe als erledigt und gibt damit sein Einverständnis. Es kann vertraglich geregelt werden, dass der Kunde sich der Qualität des Features versichert hat und somit die \gls{inps} keinerlei Kosten für eventuell auf diesem Feature basierenden Ausfälle übernimmt.
 
-Die Bestätigung des Kunden löst einen weiteren Automatisierungsmechanismus aus. Das Feature wird in den produktiven Versionierungszweig übernommen und auf dem \gls{produktivsystem} aktiviert. Der er Kunde kann sein akzeptiertes Feature betrachten, ohne dass er auf den Eingriff eines Entwicklers warten muss.
+Die Bestätigung des Kunden löst einen weiteren Automatisierungsmechanismus aus. Das Feature wird in den produktiven Versionierungszweig übernommen und auf dem \gls{produktivsystem} aktiviert. Der Kunde kann sein akzeptiertes Feature betrachten, ohne dass er auf den Eingriff eines Entwicklers warten muss.
 
-Es ein Service entwickelt, welcher die bereits genutzten Systeme git, GitHub und Basecamp verbindet und einige Automatisierungen einführt. Die Integration ist dabei transparent. Weder Kunde noch Entwickler sieht jemals eine grafische Oberfläche des Services. Beide Parteien profitieren jedoch von den Automatisierungen und Absicherungen, welche der Service bietet.
+Es wird ein Service entwickelt, welcher die bereits genutzten Systeme git, GitHub und Basecamp verbindet und einige Automatisierungen einführt. Die Integration ist dabei transparent. Weder Kunde noch Entwickler sieht jemals eine grafische Oberfläche des Services. Beide Parteien profitieren jedoch von den Automatisierungen und Absicherungen, welche der Service bietet.
 
 \gls{ape} wird als unabhängiger Web-Service mit Hilfe des Frameworks \gls{ror} in der Programmiersprache \gls{ruby} entwickelt. Die Herausforderungen bei der Planung und Implementierungen sind speziell in den zahlreichen Schnittstellen zu finden. Sechs Architekturkomponenten kommunizieren miteinander über Protokolle wie HTTP, SSH und FTP; mit Datenformaten JSON und XML; und Tools wie git und rsync.
 
@@ -25,7 +25,7 @@ Dieses Kapitel widmet sich den Grundlagen, die zum Verständnis der vorliegenden
 \subsection{Begriffseinführungen} % (fold)
 \label{sub:begriffseinfuehrungen}
 
-Um prägnante, exakte Formulierungen zu ermöglichen, werden in diesem Kapitel benötigte Wörter definiert.
+Um prägnante, exakte Formulierungen zu ermöglichen, werden in diesem Kapitel benötigte Begriffe definiert.
 
 \subsubsection{deployen} % (fold)
 \label{ssub:deployen}
@@ -36,7 +36,7 @@ Um prägnante, exakte Formulierungen zu ermöglichen, werden in diesem Kapitel b
 \label{ssub:mergen}
 \emph{mergen} beschreibt die Tätigkeit, etwas zusammenzuführen. Im Rahmen dieser Arbeit werden ausschließlich Branches innerhalb des Versionskontrollsystems git zusammengeführt. An einigen Stellen wird vom mergen von Features gesprochen. Das ändert nichts, da ein Feature exakt einem Branch entspricht.
 
-Eine Formulierung kann immer genau auf eine Folge von Befehlen zurückgeführt werden, wie am Beispiel in Listing \ref{lst:mergen} gezeigt wird.
+Eine derartige Formulierung kann immer genau auf eine Folge von Befehlen zurückgeführt werden, wie am Beispiel in Listing \ref{lst:mergen} gezeigt wird.
 
 \begin{figure}
 	\begin{lstlisting}[caption=Mergen von zwei Branches,label={lst:mergen}]
@@ -344,7 +344,7 @@ Damit sind alle Komponenten betrachtet. Je nach Kunde kann es Abweichungen geben
 \subsection{Implementierungsdetails} % (fold)
 \label{sub:implementierungsdetails}
 
-Die Schwierigkeit bei der Entwicklung des \gls{ape}-Services liegt im reibungslosen Verknüpfen der verschiedenen Services. Ein Schema der existierenden Schnittstellen ist in Abbildung\comment{fehlt} zu sehen. In den Kapiteln \ref{ssub:interpretation_von_git_commits} bis \ref{ssub:uebertragung_der_dateien} werden einige ausgewählte nichttriviale Aspekte der Schnittstellenimplementierung besprochen.
+Die Schwierigkeit bei der Entwicklung des \gls{ape}-Services liegt im reibungslosen Verknüpfen der verschiedenen Services. Ein Schema der existierenden Schnittstellen ist in Abbildung\ref{fig:ape_network} zu sehen. In den Kapiteln \ref{ssub:interpretation_von_git_commits} bis \ref{ssub:uebertragung_der_dateien} werden einige ausgewählte nichttriviale Aspekte der Schnittstellenimplementierung besprochen.
 
 \subsubsection{Interpretation von Git-Commits} % (fold)
 \label{ssub:interpretation_von_git_commits}
@@ -450,7 +450,7 @@ Insgesamt ist die Dateiübertragung mit rsync über \gls{ssh} zu bevorzugen. Mit
 \paragraph{Deployment mit FTP} % (fold)
 \label{par:deployment_mit_ftp}
 
-Aus verschiedenen Gründen kann es sein, dass eine Übertragung der Dateien über \textbf{SSH} nicht möglich ist. Als alternative Option wird das File Transfer Protocol \gls{ftp} angeboten. Es werden zunächst die wesentlichen Einschränkungen und Nachteile des Protokolls formuliert:
+Aus verschiedenen Gründen kann es sein, dass eine Übertragung der Dateien über SSH nicht möglich ist. Als alternative Option wird das File Transfer Protocol \gls{ftp} angeboten. Es werden zunächst die wesentlichen Einschränkungen und Nachteile des Protokolls formuliert:
 
 Als erstes muss der Sicherheitsaspekt bedacht werden. Im Gegensatz zu \gls{ssh} geschieht die \gls{ftp}-Authentifizierung über Nutzername und Passwort. Da alle Vorgänge automatisiert stattfinden sollen, muss das \gls{ftp}-Passwort im Klartext in der Datenbank hinterlegt sein. Eine Verschlüsselung ist möglich, jedoch kein Hashing. Dieses wird sonst für Passwörter verwendet, um einen Rückschluss auf das Klartextpasswort zu verhindern. Darum muss darauf geachtet werden, dem \gls{ftp}-Nutzer nur die minimal nötigen Rechte einzuräumen.
 
@@ -528,5 +528,5 @@ Langfristig sind verschiedene größere Module denkbar. Zum Beispiel ist ein auf
 Im Moment muss eine WordPress-Installation zu Beginn auf dem Server manuell eingerichtet werden und von diesem Zeitpunkt an wird nur noch innerhalb des \lstinline!wp-content! Ordners deployed. Es ist denkbar, dass \gls{ape} auch diese erste Installation mit übernimmt und auch Datenbankzugangsdaten, Domaineinstellungen usw. mit verwaltet.
 
 % - evtl. Diskussion von Alternativen
-Es ist auch denkbar, \gls{ape} als Plugin von \gls{jenkins} zu implementieren. Wenn eine Firma bereits \gls{ci} nutzt, wäre dies ein besserer Ansatz als \gls{ape} als eigenständigen Service laufen zu lassen. Doch bisher ist dies nicht geplant, daher gab es auch keine Veranlassung, dies in der Form umzusetzen.
+Es ist auch denkbar, \gls{ape} als Plugin von \gls{jenkins}, einem existierenden \gls{CI} System, zu implementieren. Wenn eine Firma bereits \gls{ci} nutzt, wäre dies ein besserer Ansatz als \gls{ape} als eigenständigen Service laufen zu lassen. Doch bisher ist dies nicht geplant, daher gab es auch keine Veranlassung, dies in der Form umzusetzen.
 % section zusammenfassung_und_ausblick (end)
